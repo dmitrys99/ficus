@@ -96,12 +96,13 @@ void fx_file_destructor(void* ptr)
 void fx_pipe_destructor(void* ptr)
 {
     FILE* f = (FILE*)ptr;
-    if(f)
-#ifdef _WIN32
+    if(f) {
+#   ifdef _WIN32
         _pclose(f);
-#else
+#   else
         pclose(f);
-#endif
+#   endif
+}
 }
 
 #ifdef __cplusplus

@@ -770,7 +770,7 @@ int fx_format_flt(double x, int_ default_precision, const fx_format_t* fmt, fx_s
     if ((u.i & 0x7FF0000000000000LL) != 0x7FF0000000000000LL)
         sprintf(buf, fmtstr, x >= 0 ? x : -x);
     else
-        strcpy(buf, (u.i & 0xfffffffffffffLL) != 0 ? "nan" : "inf");
+        sprintf(buf, "%s", (u.i & 0xfffffffffffffLL) != 0 ? "nan" : "inf");
     }
     n = (int_)strlen(buf);
     ptr = buf;

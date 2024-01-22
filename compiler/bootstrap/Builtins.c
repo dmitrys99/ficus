@@ -258,7 +258,7 @@ char buf[32];
     if ((u.i & 0x7f800000) != 0x7f800000)
         sprintf(buf, (a == (int)a ? "%.1f" : "%.8g"), a);
     else
-        strcpy(buf, (u.i & 0x7fffff) != 0 ? "nan" : u.i > 0 ? "inf" : "-inf");
+        sprintf(buf, "%s", (u.i & 0x7fffff) != 0 ? "nan" : u.i > 0 ? "inf" : "-inf");
     return fx_ascii2str(buf, -1, fx_result);
 
 }
@@ -272,7 +272,7 @@ char buf[32];
     if ((u.i & 0x7FF0000000000000LL) != 0x7FF0000000000000LL)
         sprintf(buf, (a == (int)a ? "%.1f" : "%.16g"), a);
     else
-        strcpy(buf, (u.i & 0xfffffffffffffLL) != 0 ? "nan" : u.i > 0 ? "inf" : "-inf");
+        sprintf(buf, "%s", (u.i & 0xfffffffffffffLL) != 0 ? "nan" : u.i > 0 ? "inf" : "-inf");
     return fx_ascii2str(buf, -1, fx_result);
 
 }

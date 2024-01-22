@@ -222,8 +222,9 @@ fun read_utf8(fname: string): string
     fx_cstr_t fname_;
     int fx_status = fx_str2cstr(fname, &fname_, 0, 0);
     if (fx_status >= 0) {
-        FILE* f = fopen(fname_.data, "rb");
-        if (f) {
+        FILE* f;
+        errno_t err = fopen_s(&f, fname_.data, "rb");
+        if (err = 0) {
             fseek(f, 0, SEEK_END);
             int_ size = (int_)ftell(f);
             fseek(f, 0, SEEK_SET);
@@ -256,7 +257,8 @@ fun write_utf8(fname: string, text: string): void
     fx_cstr_t fname_;
     int fx_status = fx_str2cstr(fname, &fname_, 0, 0);
     if (fx_status >= 0) {
-        FILE* f = fopen(fname_.data, "wb");
+        FILE* f;
+	errno_t err = fopen_s(&f, fname_.data, "wb");
         if (f) {
             fx_cstr_t buf;
             fx_status = fx_str2cstr(text, &buf, 0, 0);

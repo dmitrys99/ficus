@@ -10,6 +10,8 @@
     #include <time.h>
 #if !defined WIN32 && !defined _WIN32
     #include <unistd.h>
+#else
+    #include <direct.h>
 #endif
 
     #ifndef PATH_MAX
@@ -318,7 +320,11 @@ fx_cstr_t name_;
     if (fx_status >= 0) {
         int fstat_err = stat(name_.data, &s);
         if( fstat_err == -1) {
+            #ifdef _MSC_VER
+            *fx_result = _mkdir(name_.data) == 0;
+            #else
             *fx_result = mkdir(name_.data, (int)permissions) == 0;
+            #endif
         } else
             *fx_result = fstat_err == 0;
         fx_free_cstr(&name_);

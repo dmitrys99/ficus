@@ -219,7 +219,7 @@ fun string(a: bool) = if a {"true"} else {"false"}
     if ((u.i & 0x7f800000) != 0x7f800000)
         sprintf(buf, (f == (int)f ? "%.1f" : "%.4g"), f);
     else
-        strcpy(buf, (u.i & 0x7fffff) != 0 ? "nan" : u.i > 0 ? "inf" : "-inf");
+        strcpy_s(buf, 4, (u.i & 0x7fffff) != 0 ? "nan" : u.i > 0 ? "inf" : "-inf");
     return fx_ascii2str(buf, -1, fx_result);
 }
 @pure fun string(a: float): string
@@ -230,7 +230,7 @@ fun string(a: bool) = if a {"true"} else {"false"}
     if ((u.i & 0x7f800000) != 0x7f800000)
         sprintf(buf, (a == (int)a ? "%.1f" : "%.8g"), a);
     else
-        strcpy(buf, (u.i & 0x7fffff) != 0 ? "nan" : u.i > 0 ? "inf" : "-inf");
+        strcpy_s(buf, 4, (u.i & 0x7fffff) != 0 ? "nan" : u.i > 0 ? "inf" : "-inf");
     return fx_ascii2str(buf, -1, fx_result);
 }
 @pure fun string(a: double): string
@@ -241,7 +241,7 @@ fun string(a: bool) = if a {"true"} else {"false"}
     if ((u.i & 0x7FF0000000000000LL) != 0x7FF0000000000000LL)
         sprintf(buf, (a == (int)a ? "%.1f" : "%.16g"), a);
     else
-        strcpy(buf, (u.i & 0xfffffffffffffLL) != 0 ? "nan" : u.i > 0 ? "inf" : "-inf");
+        strcpy_s(buf, 4, (u.i & 0xfffffffffffffLL) != 0 ? "nan" : u.i > 0 ? "inf" : "-inf");
     return fx_ascii2str(buf, -1, fx_result);
 }
 @inline fun string(a: string): string = a

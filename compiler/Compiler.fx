@@ -398,7 +398,7 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
                 }
             val incdirs = " ".join([::for d <- Ast.all_c_inc_dirs.list() {"/I"+d}])
             val cflags = f"/utf-8 /nologo{opt_flags}{omp_flag} {incdirs} /I{runtime_include_path}"
-            ("win", "cl", "cl", ".obj", "/c /Fo", "/Fe", "", cflags, "/nologo /F10485760 kernel32.lib advapi32.lib")
+            ("win", "clang-cl", "clang-cl", ".obj", "/c /Fo", "/Fe", "", cflags, "/nologo /F10485760 kernel32.lib advapi32.lib")
         } else {
             // unix or hopefully something more or less compatible with it
             val c_comp = Sys.getenv("CC", "cc")
@@ -497,7 +497,8 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
             if ok_j && (reprocess || !Filename.exists(obj_filename)) {
                 val cmd = f"{comp} {cflags} {obj_opt}{obj_filename} {c_filename}"
                 val result =
-                    if c_comp == "cl" {
+                    if c_comp == "clang-cl" {
+			println("HIA: 1")
                         val p = File.popen(cmd, "rt")
                         var lineno = 0
                         // read and immediately dump the output from cl,
@@ -510,6 +511,7 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
                         }
                         p.pclose_exit_status() == 0
                     } else {
+			println("HIA: 2")
                         Sys.command(cmd) == 0
                     }
                 val status = if result {clrmsg(MsgGreen, "ok")} else {clrmsg(MsgRed, "fail")}
@@ -546,7 +548,8 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
         pr_verbose(f"Linking the app with flags={clibs}")
         val cmd = (if any_cpp {cpp_comp} else {c_comp}) + " " + appname_opt + Options.opt.app_filename
         val cmd = cmd + " " + " ".join(objs) + " " + clibs
-        //pr_verbose(f"{cmd}\n")
+        pr_verbose(f"{cmd}\n")
+	println("HIA: 3")
         val ok = Sys.command(cmd) == 0
         ok
     }

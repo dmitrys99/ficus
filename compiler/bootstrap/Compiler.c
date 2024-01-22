@@ -10636,8 +10636,8 @@ FX_EXTERN_C int _fx_M8CompilerFM6run_ccB2LR17C_form__cmodule_tS(
          FX_CALL(fx_strjoin(0, 0, 0, strs_2, 7, &cflags_0), _fx_cleanup);
       }
       fx_str_t slit_14 = FX_MAKE_STR("win");
-      fx_str_t slit_15 = FX_MAKE_STR("cl");
-      fx_str_t slit_16 = FX_MAKE_STR("cl");
+      fx_str_t slit_15 = FX_MAKE_STR("clang-cl");
+      fx_str_t slit_16 = FX_MAKE_STR("clang-cl");
       fx_str_t slit_17 = FX_MAKE_STR(".obj");
       fx_str_t slit_18 = FX_MAKE_STR("/c /Fo");
       fx_str_t slit_19 = FX_MAKE_STR("/Fe");
