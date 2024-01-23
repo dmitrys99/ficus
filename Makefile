@@ -8,7 +8,7 @@ BOOTSTRAP_BUILD_DIR := $(BUILD_DIR)/bootstrap
 BOOTSTRAP_SRC := ./compiler/bootstrap
 BOOTSTRAP_SRCS := $(wildcard $(BOOTSTRAP_SRC)/*.c)
 FICUS0  := $(BOOTSTRAP_BUILD_DIR)/ficus0
-GIT_COMMIT := "$(shell git describe)"
+GIT_COMMIT := "$(shell git show -s --pretty=format:'%h')"
 FICUS_SRC := ./compiler
 FICUS_SRCS := $(wildcard $(FICUS_SRC)/*.fx)
 FICUS_STDLIB := ./lib
@@ -68,7 +68,7 @@ $(BOOTSTRAP_BUILD_DIR)/%.o: $(BOOTSTRAP_SRC)/%.c $(RUNTIME_DEPS) | $(BOOTSTRAP_B
 
 $(FICUS): $(FICUS0) $(FICUS_SRCS) $(FICUS_STDLIB_SRCS)
 	@echo "$(COLOR_INFO)Building fresh compiler from the actual ficus sources$(COLOR_NORMAL)"
-	@echo #define FX_GIT_COMMIT $(GIT_COMMIT) > $(RUNTIME_DIR)/version.git_commit
+	@echo \#define FX_GIT_COMMIT \"$(GIT_COMMIT)\" > $(RUNTIME_DIR)/version.git_commit
 	@$(MKDIR) $(FICUS_BIN)
 	@$(FICUS0) $(FICUS_FLAGS) -o $(FICUS) $(FICUS_SRC)/fx.fx
 
