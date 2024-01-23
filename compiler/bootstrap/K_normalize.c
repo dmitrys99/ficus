@@ -7673,7 +7673,7 @@ FX_EXTERN_C int _fx_M3AstFM6__eq__B2RM4id_tRM4id_t(
    bool* fx_result,
    void* fx_fv);
 
-FX_EXTERN_C int _fx_F4joinS2SLS(fx_str_t* sep_0, struct _fx_LS_data_t* strs_0, fx_str_t* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_F4joinS2SLS(fx_str_t* sep, struct _fx_LS_data_t* strs, fx_str_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C_VAL(fx_exn_t _fx_E15Set__RBSetErrorv)
 static int _fx_M11K_normalizeFM9typ2ktyp_N14K_form__ktyp_t3N10Ast__typ_trLR9Ast__id_tR10Ast__loc_t(
@@ -8430,7 +8430,7 @@ FX_EXTERN_C int _fx_M6K_formFM13KDefInterfaceN14K_form__kexp_t1rRM15kdefinterfac
 
 FX_EXTERN_C int _fx_M4FileFM9read_utf8S1S(fx_str_t* fname, fx_str_t* fx_result, void* fx_fv);
 
-FX_EXTERN_C int _fx_M4FileFM14read_binary_u8A1b1S(fx_str_t* fname_0, fx_arr_t* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_M4FileFM14read_binary_u8A1b1S(fx_str_t* fname, fx_arr_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C void _fx_M3AstFM8ScModuleN12Ast__scope_t1i(int_ arg0, struct _fx_N12Ast__scope_t* fx_result);
 

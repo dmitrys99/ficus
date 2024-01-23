@@ -3409,13 +3409,13 @@ static _fx_N14K_form__ktyp_t_data_t KTypVoid_data_5 = { 1, 7 };
 _fx_N14K_form__ktyp_t _fx_g23K_optim_matop__KTypVoid = &KTypVoid_data_5;
 static _fx_N14K_form__ktyp_t_data_t KTypBool_data_3 = { 1, 8 };
 _fx_N14K_form__ktyp_t _fx_g23K_optim_matop__KTypBool = &KTypBool_data_3;
-FX_EXTERN_C int _fx_M7HashmapFM9makeindexA1i1i(int_ size_0, fx_arr_t* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_M7HashmapFM9makeindexA1i1i(int_ size, fx_arr_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C int _fx_F9make_FailE1S(fx_str_t* arg0, fx_exn_t* fx_result);
 
-FX_EXTERN_C int _fx_F6assertv1B(bool f_0, void* fx_fv);
+FX_EXTERN_C int _fx_F6assertv1B(bool f, void* fx_fv);
 
-FX_EXTERN_C int _fx_M7HashsetFM9makeindexA1i1i(int_ size_0, fx_arr_t* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_M7HashsetFM9makeindexA1i1i(int_ size, fx_arr_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C int _fx_M3AstFM5OpCmpN13Ast__binary_t1N12Ast__cmpop_t(
    struct _fx_N12Ast__cmpop_t* arg0,

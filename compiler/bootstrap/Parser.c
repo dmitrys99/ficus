@@ -5850,23 +5850,23 @@ FX_EXTERN_C bool _fx_F6__eq__B2SS(fx_str_t* a, fx_str_t* b, void* fx_fv);
 
 FX_EXTERN_C void _fx_F12print_stringv1S(fx_str_t* a, void* fx_fv);
 
-FX_EXTERN_C int _fx_M7HashmapFM9makeindexA1i1i(int_ size_0, fx_arr_t* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_M7HashmapFM9makeindexA1i1i(int_ size, fx_arr_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C int _fx_F9make_FailE1S(fx_str_t* arg0, fx_exn_t* fx_result);
 
 FX_EXTERN_C uint64_t _fx_F4hashq1S(fx_str_t* x, void* fx_fv);
 
-FX_EXTERN_C int _fx_F6assertv1B(bool f_0, void* fx_fv);
+FX_EXTERN_C int _fx_F6assertv1B(bool f, void* fx_fv);
 
-FX_EXTERN_C int _fx_M7HashsetFM9makeindexA1i1i(int_ size_0, fx_arr_t* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_M7HashsetFM9makeindexA1i1i(int_ size, fx_arr_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C_VAL(struct _fx_R10Ast__loc_t _fx_g10Ast__noloc)
 FX_EXTERN_C int _fx_M3AstFM2ppS1RM4id_t(struct _fx_R9Ast__id_t* i_0, fx_str_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C int _fx_M6StringFM5splitLS3SCB(
-   fx_str_t* s_0,
-   char_ c_0,
-   bool allow_empty_0,
+   fx_str_t* s,
+   char_ c,
+   bool allow_empty,
    struct _fx_LS_data_t** fx_result,
    void* fx_fv);
 
@@ -5879,14 +5879,14 @@ FX_EXTERN_C int _fx_M6StringFM7replaceS3SSS(
    fx_str_t* fx_result,
    void* fx_fv);
 
-FX_EXTERN_C int _fx_M8FilenameFM6locateS2SLS(fx_str_t* name_0, struct _fx_LS_data_t* dirs_0, fx_str_t* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_M8FilenameFM6locateS2SLS(fx_str_t* name, struct _fx_LS_data_t* dirs, fx_str_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C_VAL(int FX_EXN_NotFoundError)
-FX_EXTERN_C int _fx_M8FilenameFM6concatS2SS(fx_str_t* dir_0, fx_str_t* fname_0, fx_str_t* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_M8FilenameFM6concatS2SS(fx_str_t* dir, fx_str_t* fname, fx_str_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C int _fx_M3AstFM6stringS1RM4id_t(struct _fx_R9Ast__id_t* i_0, fx_str_t* fx_result, void* fx_fv);
 
-FX_EXTERN_C int _fx_M8FilenameFM7dirnameS1S(fx_str_t* path_0, fx_str_t* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_M8FilenameFM7dirnameS1S(fx_str_t* path, fx_str_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C_VAL(struct _fx_Nt10Hashset__t1S_data_t* _fx_g19Ast__all_c_inc_dirs)
 FX_EXTERN_C int _fx_M3AstFM11find_modulei2RM4id_tS(
@@ -6682,7 +6682,7 @@ static int
    struct _fx_T2LT2N14Lexer__token_tR10Ast__loc_tN15Parser__ppval_t* fx_result,
    void* fx_fv);
 
-FX_EXTERN_C int _fx_F6stringS1B(bool a_0, fx_str_t* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_F6stringS1B(bool a, fx_str_t* fx_result, void* fx_fv);
 
 FX_EXTERN_C int _fx_F6stringS1l(int64_t a, fx_str_t* fx_result, void* fx_fv);
 
@@ -6696,9 +6696,9 @@ static int
    struct _fx_T2LT2N14Lexer__token_tR10Ast__loc_tN15Parser__ppval_t* fx_result,
    void* fx_fv);
 
-FX_EXTERN_C int _fx_F7__cmp__i2ll(int64_t a_0, int64_t b_0, int_* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_F7__cmp__i2ll(int64_t a, int64_t b, int_* fx_result, void* fx_fv);
 
-FX_EXTERN_C int _fx_F7__cmp__i2BB(bool a_0, bool b_0, int_* fx_result, void* fx_fv);
+FX_EXTERN_C int _fx_F7__cmp__i2BB(bool a, bool b, int_* fx_result, void* fx_fv);
 
 FX_EXTERN_C int_ _fx_F7__cmp__i2SS(fx_str_t* a, fx_str_t* b, void* fx_fv);
 
@@ -6710,7 +6710,7 @@ FX_EXTERN_C void _fx_M3AstFM9LitStringN10Ast__lit_t1S(fx_str_t* arg0, struct _fx
 
 FX_EXTERN_C_VAL(fx_arr_t _fx_g16Ast__all_modules)
 FX_EXTERN_C int _fx_M10LexerUtilsFM11make_streamN20LexerUtils__stream_t1S(
-   fx_str_t* fname_0,
+   fx_str_t* fname,
    struct _fx_N20LexerUtils__stream_t_data_t** fx_result,
    void* fx_fv);
 
@@ -26351,9 +26351,9 @@ static int
                if (FX_REC_VARIANT_TAG(bop_0) == 23) {
                   if (rhs_0.tag == 1) {
                      if (result_3.tag == 1) {
-                        int_ res_0;
-                        FX_CALL(_fx_F7__cmp__i2ll(result_3.u.PP_INT, rhs_0.u.PP_INT, &res_0, 0), _fx_catch_4);
-                        _fx_M6ParserFM6PP_INTN15Parser__ppval_t1l((int64_t)res_0, &result_5);
+                        int_ v_7;
+                        FX_CALL(_fx_F7__cmp__i2ll(result_3.u.PP_INT, rhs_0.u.PP_INT, &v_7, 0), _fx_catch_4);
+                        _fx_M6ParserFM6PP_INTN15Parser__ppval_t1l((int64_t)v_7, &result_5);
 
                      _fx_catch_4: ;
                         goto _fx_endmatch_1;
@@ -26363,9 +26363,9 @@ static int
                if (FX_REC_VARIANT_TAG(bop_0) == 23) {
                   if (rhs_0.tag == 2) {
                      if (result_3.tag == 2) {
-                        int_ res_1;
-                        FX_CALL(_fx_F7__cmp__i2BB(result_3.u.PP_BOOL, rhs_0.u.PP_BOOL, &res_1, 0), _fx_catch_5);
-                        _fx_M6ParserFM6PP_INTN15Parser__ppval_t1l((int64_t)res_1, &result_5);
+                        int_ v_8;
+                        FX_CALL(_fx_F7__cmp__i2BB(result_3.u.PP_BOOL, rhs_0.u.PP_BOOL, &v_8, 0), _fx_catch_5);
+                        _fx_M6ParserFM6PP_INTN15Parser__ppval_t1l((int64_t)v_8, &result_5);
 
                      _fx_catch_5: ;
                         goto _fx_endmatch_1;
@@ -26375,13 +26375,13 @@ static int
                if (FX_REC_VARIANT_TAG(bop_0) == 23) {
                   if (rhs_0.tag == 3) {
                      if (result_3.tag == 3) {
-                        int_ v_7 = _fx_F7__cmp__i2SS(&result_3.u.PP_STRING, &rhs_0.u.PP_STRING, 0);
-                        _fx_M6ParserFM6PP_INTN15Parser__ppval_t1l((int64_t)v_7, &result_5);
+                        int_ v_9 = _fx_F7__cmp__i2SS(&result_3.u.PP_STRING, &rhs_0.u.PP_STRING, 0);
+                        _fx_M6ParserFM6PP_INTN15Parser__ppval_t1l((int64_t)v_9, &result_5);
                         goto _fx_endmatch_1;
                      }
                   }
                }
-               fx_exn_t v_8 = {0};
+               fx_exn_t v_10 = {0};
                _fx_R10Ast__loc_t loc_3;
                if (ts_4 != 0) {
                   loc_3 = ts_4->hd.t1;
@@ -26391,11 +26391,11 @@ static int
                }
                FX_CHECK_EXN(_fx_catch_6);
                fx_str_t slit_3 = FX_MAKE_STR("unsupported binary operation");
-               FX_CALL(_fx_M6ParserFM15make_ParseErrorE2R10Ast__loc_tS(&loc_3, &slit_3, &v_8), _fx_catch_6);
-               FX_THROW(&v_8, true, _fx_catch_6);
+               FX_CALL(_fx_M6ParserFM15make_ParseErrorE2R10Ast__loc_tS(&loc_3, &slit_3, &v_10), _fx_catch_6);
+               FX_THROW(&v_10, true, _fx_catch_6);
 
             _fx_catch_6: ;
-               fx_free_exn(&v_8);
+               fx_free_exn(&v_10);
 
             _fx_endmatch_1: ;
                FX_CHECK_EXN(_fx_catch_7);
