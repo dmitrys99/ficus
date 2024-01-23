@@ -498,7 +498,6 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
                 val cmd = f"{comp} {cflags} {obj_opt}{obj_filename} {c_filename}"
                 val result =
                     if c_comp == "clang-cl" {
-			println("HIA: 1")
                         val p = File.popen(cmd, "rt")
                         var lineno = 0
                         // read and immediately dump the output from cl,
@@ -511,7 +510,6 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
                         }
                         p.pclose_exit_status() == 0
                     } else {
-			println("HIA: 2")
                         Sys.command(cmd) == 0
                     }
                 val status = if result {clrmsg(MsgGreen, "ok")} else {clrmsg(MsgRed, "fail")}
@@ -549,7 +547,6 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
         val cmd = (if any_cpp {cpp_comp} else {c_comp}) + " " + appname_opt + Options.opt.app_filename
         val cmd = cmd + " " + " ".join(objs) + " " + clibs
         pr_verbose(f"{cmd}\n")
-	println("HIA: 3")
         val ok = Sys.command(cmd) == 0
         ok
     }

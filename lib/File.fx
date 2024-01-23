@@ -31,18 +31,24 @@ val stderr = get_stdstream(2)
     if (fx_status >= 0) {
         fx_status = fx_str2cstr(mode, &mode_, 0, 0);
         if (fx_status >= 0) {
-            FILE* f = ispipe ?
-            #ifdef _WIN32
-                _popen(fname_.data, mode_.data) :
-            #else
-                popen(fname_.data, mode_.data) :
-            #endif
-                fopen(fname_.data, mode_.data);
+            FILE* f;
+            if (ispipe) {
+#           ifdef _WIN32
+                f = _popen(fname_.data, mode_.data);
+#           else
+                f = popen(fname_.data, mode_.data);
+#           endif
+            } else {
+#           ifdef _WIN32
+                fopen_s(&f, fname_.data, mode_.data);
+#           else
+                f = fopen(fname_.data, mode_.data);
+#           endif
+            }
             if (f) {
                 fx_status = fx_make_cptr(f, (ispipe ? fx_pipe_destructor :
                                         fx_file_destructor), fx_result);
-            }
-            else {
+            } else {
                 fx_status = FX_SET_EXN_FAST(FX_EXN_FileOpenError);
             }
             fx_free_cstr(&mode_);
@@ -219,12 +225,19 @@ fun read_binary_u8(fname: string): uint8 []
 
 fun read_utf8(fname: string): string
 @ccode {
+
     fx_cstr_t fname_;
     int fx_status = fx_str2cstr(fname, &fname_, 0, 0);
     if (fx_status >= 0) {
         FILE* f;
+#       ifdef _WIN32
         errno_t err = fopen_s(&f, fname_.data, "rb");
-        if (err = 0) {
+        if (err == 0)
+#       else
+        f = fopen(fname_.data, "rb");
+        if (f)
+#       endif
+        {
             fseek(f, 0, SEEK_END);
             int_ size = (int_)ftell(f);
             fseek(f, 0, SEEK_SET);
@@ -258,8 +271,14 @@ fun write_utf8(fname: string, text: string): void
     int fx_status = fx_str2cstr(fname, &fname_, 0, 0);
     if (fx_status >= 0) {
         FILE* f;
-	errno_t err = fopen_s(&f, fname_.data, "wb");
-        if (f) {
+#       ifdef _WIN32
+        errno_t err = fopen_s(&f, fname_.data, "wb");
+        if (err == 0)
+#       else
+        f = fopen(fname_.data, "wb");
+        if (f)
+#       endif
+        {
             fx_cstr_t buf;
             fx_status = fx_str2cstr(text, &buf, 0, 0);
             if (fx_status >= 0) {
