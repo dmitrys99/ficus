@@ -33,11 +33,11 @@ ifeq ($(UNAME_S),Darwin)
 	ifeq ($(UNAME_M),x86_64)
 		CFLAGS := -Xclang -fopenmp $(CFLAGS)
 		LDFLAGS := -Xclang -fopenmp $(LDFLAGS)
-		LDLIBS += -L./runtime/lib/macos_x64/ -lomp1
+		LDLIBS += -L./runtime/lib/macos_x64/ -lomp
 	endif
 	ifeq ($(UNAME_M),arm64)
 		CFLAGS := -Xclang -fopenmp $(CFLAGS)
-		LDLIBS += -L./runtime/lib/macos_arm64/ -lomp2
+		LDLIBS += -L./runtime/lib/macos_arm64/ -lomp
 	endif
 endif
 ifeq ($(UNAME_S),Linux)
