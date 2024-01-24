@@ -496,6 +496,7 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
         val (ok_j, recompiled, status_j) =
             if ok_j && (reprocess || !Filename.exists(obj_filename)) {
                 val cmd = f"{comp} {cflags} {obj_opt}{obj_filename} {c_filename}"
+                pr_verbose(f"Compilation command: '{cmd}'")
                 val result =
                     if c_comp == "clang-cl" {
                         val p = File.popen(cmd, "rt")
