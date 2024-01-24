@@ -397,7 +397,7 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
                     " /DNDEBUG /MT " + (if opt_level == 1 {"/O1"} else {"/O2"})
                 }
             val incdirs = " ".join([::for d <- Ast.all_c_inc_dirs.list() {"/I"+d}])
-            val cflags = f"/utf-8 /nologo{opt_flags}{omp_flag} {incdirs} /I{runtime_include_path}"
+            val cflags = f"-march=native /utf-8 /nologo{opt_flags}{omp_flag} {incdirs} /I{runtime_include_path}"
             ("win", "clang-cl", "clang-cl", ".obj", "/c /Fo", "/Fe", "", cflags, "/nologo /F10485760 kernel32.lib advapi32.lib")
         } else {
             // unix or hopefully something more or less compatible with it
