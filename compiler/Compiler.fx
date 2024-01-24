@@ -606,6 +606,8 @@ and there are <ficus_root>/runtime and <ficus_root>/lib.
                     Ast_pp.pprint_mod(minfo)
                 }
             }
+        } else {
+            pr_verbose("Typecheck not ok")
         }
         val (kmods, ok) = if ok { k_normalize_all(Ast.all_modules_sorted) } else { ([], false) }
         if ok {
