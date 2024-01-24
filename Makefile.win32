@@ -8,9 +8,8 @@ FICUS0 = $(BOOTSTRAP_BUILD_DIR)/ficus0.exe
 FICUS_BIN = ./bin
 FICUS = $(FICUS_BIN)/ficus.exe
 
-CL = clang-cl /nologo /MT /Ob2 /D WIN32 /D _WIN32 -march=native /I$(EXTRA_INCLUDE) 
-LDLIBS = kernel32.lib advapi32.lib 
-#"C:\Program Files\LLVM\lib\clang\17\lib\windows\clang_rt.builtins-x86_64.lib"
+CL = clang-cl /nologo /MT /D WIN32 /D _WIN32 -march=native /I$(EXTRA_INCLUDE) 
+LDLIBS = kernel32.lib advapi32.lib "C:\Program Files\LLVM\lib\clang\17\lib\windows\clang_rt.builtins-x86_64.lib"
 
 FICUS_FLAGS = -verbose -O3
 
@@ -28,17 +27,17 @@ create_dirs:
 
 $(FICUS0): $(BOOTSTRAP_SRC)/*.c
 	@SET OBJS=$(**:.c=.obj)%
-	@nmake $(BOOTSTRAP_BUILD_DIR)/libficus.obj %OBJS:$(BOOTSTRAP_SRC)=$(BOOTSTRAP_BUILD_DIR)%%
-	$(CL) $(LDFLAGS) /F10485760 /Fe$(FICUS0) $(LDLIBS) %OBJS:$(BOOTSTRAP_SRC)=$(BOOTSTRAP_BUILD_DIR)% $(BOOTSTRAP_BUILD_DIR)/libficus.obj
+	@nmake /f Makefile.win32 $(BOOTSTRAP_BUILD_DIR)/libficus.obj %OBJS:$(BOOTSTRAP_SRC)=$(BOOTSTRAP_BUILD_DIR)%%
+	$(CL) $(LDFLAGS) /Fe$(FICUS0) $(LDLIBS) %OBJS:$(BOOTSTRAP_SRC)=$(BOOTSTRAP_BUILD_DIR)% $(BOOTSTRAP_BUILD_DIR)/libficus.obj
 
 {$(BOOTSTRAP_SRC)}.c{$(BOOTSTRAP_BUILD_DIR)}.obj:
-	@$(CL) $(CFLAGS) /c /Fo$@ $<
+	@$(CL) $(CFLAGS) /Ob2 /c /Fo$@ $<
 
 {$(RUNTIME_DIR)/impl}.c{$(BOOTSTRAP_BUILD_DIR)}.obj:
 	@$(CL) $(CFLAGS) /c /Fo$@ $<
 
 $(FICUS): $(FICUS0) $(SRC1)
-	@$(FICUS0:/=\) -verbose $(FICUS_FLAGS) -o $(FICUS_BIN)/ficus $(FICUS_SRC)/fx.fx
+	@$(FICUS0:/=\) $(FICUS_FLAGS) -o $(FICUS_BIN)/ficus $(FICUS_SRC)/fx.fx
 
 final_note:
 	@echo ""
