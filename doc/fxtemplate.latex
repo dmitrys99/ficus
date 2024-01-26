@@ -105,7 +105,7 @@ $if(babel-newcommands)$
 $endif$
 \else
   \usepackage{polyglossia}
-  \setmainlanguage[$polyglossia-lang.options$]{$polyglossia-lang.name$}
+  \setmainlanguage[$babel-lang.options$]{$babel-lang$}
 $for(polyglossia-otherlangs)$
   \setotherlanguage[$polyglossia-otherlangs.options$]{$polyglossia-otherlangs.name$}
 $endfor$
@@ -135,6 +135,7 @@ $endif$
    morestring=[b]"
   }[keywords,comments,strings]
 \lstset{commentstyle=\itshape\color{cmtcolor},columns=flexible,basicstyle=\ttfamily,
+inputencoding=utf8,
 keywordstyle=\mdseries,keepspaces=true,showstringspaces=false,
 breaklines=true, breakautoindent=true,
 framesep=10pt,
@@ -257,8 +258,6 @@ contents={\begin{tikzpicture}[remember picture,overlay]
 
 % Using fancy headers and footers
 \usepackage{fancyhdr}
-\usepackage[yyyymmdd,hhmmss]{datetime}
-\newdateformat{fxdate}{\THEDAY\,\,\monthname[\THEMONTH] \THEYEAR}
 \pagestyle{fancy}
 
 $if(usesubsection)$
@@ -279,11 +278,11 @@ $if(title)$
 \begin{figure}
     \vspace*{6cm}\par
     \noindent
-    \textcolor{fxcolor}{\fontsize{35}{45}\textbf{\textbf\itshape{Ficus\\[5pt]programming\\[5pt]language}}}
+    \textcolor{fxcolor}{\fontsize{35}{45}\textbf{\textbf\itshape{$if(title)$$title$$else$Ficus\\[5pt]programming\\[5pt]language$endif$}}}
     \vspace*{4cm}\par
     \noindent
     \textcolor{black}{\fontsize{20}{20}\textbf{$author$}}\\[5pt]
-    \textcolor{black}{\fontsize{15}{15}\textbf{\fxdate\today}}
+    \textcolor{black}{\fontsize{15}{15}\textbf{\today}}
     \vspace*{3cm}\par
     \begin{flushright}
     \end{flushright}

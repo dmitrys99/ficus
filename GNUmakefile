@@ -86,10 +86,71 @@ final_note: | $(FICUS)
 	@echo "in the current directory for the intermediate .c and .o files,"
 	@echo "as well as the produced application".
 
-doc: ficustut_a4.pdf
+doc: ficustut_a4.pdf ficustut_ru_a4.pdf
 
 ficustut_a4.pdf: doc/ficustut.md doc/fxtemplate.latex Makefile
-	pandoc -f markdown --pdf-engine=xelatex --resource-path=doc:. -V geometry:margin=1in -V mainfont='Source Serif 4' -V fontsize=11pt -V monofont='IBM Plex Mono' -V documentclass=article -V papersize=A4 -V urlcolor=red -V title="Ficus programming language" -V author="Vadim Pisarevsky" --listings --template doc/fxtemplate.latex -o doc/ficustut_a4.pdf --toc doc/ficustut.md
+	pandoc                                        \
+		-f markdown                           \
+		--pdf-engine=xelatex                  \
+		--resource-path=doc:.                 \
+		-V geometry:margin=1in                \
+		-V mainfont='Source Serif 4'          \
+		-V fontsize=11pt                      \
+		-V monofont='IBM Plex Mono'           \
+		-V documentclass=article              \
+		-V papersize=A4                       \
+		-V title="Ficus\\\\[5pt]programming\\\\[5pt]language" \
+		-V urlcolor=red                       \
+		-V author="Vadim Pisarevsky"          \
+		--listings                            \
+		--template doc/fxtemplate.latex       \
+		-o doc/ficustut_a4.pdf                \
+		--toc                                 \
+		doc/ficustut.md
+
+ficustut_ru_a4.pdf: doc/ficustut_ru.md doc/fxtemplate.latex Makefile
+	pandoc                                        \
+		-V geometry:margin=1in                \
+		-V mainfont='Source Serif 4'          \
+		-V fontsize=11pt                      \
+		-V monofont='IBM Plex Mono'           \
+		-V documentclass=article              \
+		-V papersize=A4                       \
+		-V urlcolor=red                       \
+		-V title="Язык\\\\[12pt]программирования\\\\[5pt]Ficus" \
+		-V author="Вадим Писаревский"         \
+		-V header-includes="\addto\captionsrussian{\renewcommand{\contentsname}{Содержание}}" \
+		-V lang=ru                            \
+		-f markdown                           \
+		--pdf-engine=xelatex                  \
+		--resource-path=doc:.                 \
+		--listings                            \
+		--template doc/fxtemplate.latex       \
+		-o doc/ficustut_ru_a4.pdf             \
+		--toc                                 \
+		doc/ficustut_ru.md
+
+ficustut_ru_a4.tex: doc/ficustut_ru.md doc/fxtemplate.latex Makefile
+	pandoc                                        \
+		-V geometry:margin=1in                \
+		-V mainfont='Source Serif 4'          \
+		-V fontsize=11pt                      \
+		-V monofont='IBM Plex Mono'           \
+		-V documentclass=article              \
+		-V papersize=A4                       \
+		-V urlcolor=red                       \
+		-V title="Язык\\\\[12pt]программирования\\\\[5pt]Ficus" \
+		-V author="Вадим Писаревский"         \
+		-V header-includes="\addto\captionsrussian{\renewcommand{\contentsname}{Содержание}}" \
+		-V lang=ru                            \
+		-f markdown                           \
+		--pdf-engine=xelatex                  \
+		--resource-path=doc:.                 \
+		--listings                            \
+		--template doc/fxtemplate.latex       \
+		-o doc/ficustut_ru_a4.tex             \
+		--toc                                 \
+		doc/ficustut_ru.md
 
 clean:
 	@$(RM) $(BOOTSTRAP_BUILD_DIR)
