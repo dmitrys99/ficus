@@ -1,50 +1,102 @@
-EXTRA_INCLUDE = ./runtime
-BUILD_DIR = ./__fxbuild__
-BOOTSTRAP_BUILD_DIR = $(BUILD_DIR)/bootstrap
-BOOTSTRAP_SRC = ./compiler/bootstrap
-FICUS_SRC = ./compiler
-RUNTIME_DIR = ./runtime/ficus
-FICUS0 = $(BOOTSTRAP_BUILD_DIR)/ficus0.exe
-FICUS_BIN = ./bin
-FICUS = $(FICUS_BIN)/ficus.exe
+EXTRA_INCLUDE := ./runtime
+RUNTIME_DIR := ./runtime/ficus
+RUNTIME_DEPS := $(wildcard $(RUNTIME_DIR)/*.h)
+RUNTIME_IMPL_DEPS := $(wildcard $(RUNTIME_DIR)/impl/*.h)
+RUNTIME_LIBFICUS_C := $(RUNTIME_DIR)/impl/libficus.c
+BUILD_DIR := __fxbuild__
+BOOTSTRAP_BUILD_DIR := $(BUILD_DIR)\bootstrap
+BOOTSTRAP_SRC := ./compiler/bootstrap
+BOOTSTRAP_SRCS := $(wildcard $(BOOTSTRAP_SRC)/*.c)
+FICUS0  := $(BOOTSTRAP_BUILD_DIR)/ficus0.exe
+GIT_COMMIT := $(shell git show -s --pretty=format:'%h')
+FICUS_SRC := ./compiler
+FICUS_SRCS := $(wildcard $(FICUS_SRC)/*.fx)
+FICUS_STDLIB := ./lib
+FICUS_STDLIB_SRCS := $(wildcard $(FICUS_STDLIB)/*.fx)
+FICUS_BIN := .\bin
+FICUS := $(FICUS_BIN)/ficus.exe
 
-CL = clang-cl /nologo /MT /D WIN32 /D _WIN32 -march=native /I$(EXTRA_INCLUDE) 
-LDLIBS = kernel32.lib advapi32.lib "C:\Program Files\LLVM\lib\clang\17\lib\windows\clang_rt.builtins-x86_64.lib"
+CLANG_RUNTIME_LIB := clang_rt.builtins-x86_64.lib
 
-FICUS_FLAGS = -verbose -O3
+COLOR_OK := [32m
+COLOR_INFO := [36m
+COLOR_ERROR := [31m
+COLOR_NORMAL := [0m
+MKDIR := mkdir 
+RM := rmdir /S /Q
+CC := clang -march=native -Wno-unknown-warning-option -Wno-dangling-else -Wno-static-in-inline -O3
+CFLAGS := -I$(EXTRA_INCLUDE) -c -o
+LDFLAGS := -o
+LDLIBS := -lkernel32.lib -ladvapi32.lib
+BOOTSTRAP_OBJS := $(patsubst $(BOOTSTRAP_SRC)/%.c,$(BOOTSTRAP_BUILD_DIR)/%.o,$(BOOTSTRAP_SRCS)) $(BOOTSTRAP_BUILD_DIR)/libficus.o
 
-all: create_dirs $(FICUS0) $(FICUS) final_note
+CFLAGS := -fopenmp $(CFLAGS)
+LDFLAGS := -fopenmp $(LDFLAGS)
+FICUS_FLAGS := -verbose -O3
 
-clean:
-	@if exist "$(BOOTSTRAP_BUILD_DIR)/" del /S /Q "$(BOOTSTRAP_BUILD_DIR)"
-	@if exist "$(BUILD_DIR)/ficus/" del /S /Q "$(BUILD_DIR)/ficus"
-	@if exist "$(FICUS)" del /S /Q "$(FICUS)"
+.PHONY: all clean final_note doc
 
-create_dirs:
-	@if not exist "$(BUILD_DIR)/" mkdir "$(BUILD_DIR)"
-	@if not exist "$(BOOTSTRAP_BUILD_DIR)/" mkdir "$(BOOTSTRAP_BUILD_DIR)"
-	@if not exist "$(FICUS_BIN)/" mkdir "$(FICUS_BIN)"
+all: clang $(FICUS0) $(FICUS) final_note
+clang:
+	@$(eval CLANG_RUNTIME_DIR := $(shell clang -print-runtime-dir))
+ifeq ($(CLANG_RUNTIME_DIR),"")
+	@echo $(strip $(CLANG_RUNTIME_DIR))
+	@echo $(COLOR_ERROR)clang not found.$(COLOR_NORMAL) Please make sure clang is on %%PATH%%.
+	@exit 1
+endif
+	@$(eval LDLIBS += -l"$(CLANG_RUNTIME_DIR)/$(CLANG_RUNTIME_LIB)")
+	@$(eval FICUS_FLAGS += -clibs '-fopenmp -l"$(CLANG_RUNTIME_DIR)/$(CLANG_RUNTIME_LIB)"')
+$(FICUS0): $(BOOTSTRAP_OBJS)
+	@echo CC ficus0
+	@echo $(CC) $(LDFLAGS)$@ $^ $(LDLIBS)
+	@$(CC) $(LDFLAGS)$@ $^ $(LDLIBS)
 
-$(FICUS0): $(BOOTSTRAP_SRC)/*.c
-	@SET OBJS=$(**:.c=.obj)%
-	@nmake /f Makefile.win32 $(BOOTSTRAP_BUILD_DIR)/libficus.obj %OBJS:$(BOOTSTRAP_SRC)=$(BOOTSTRAP_BUILD_DIR)%%
-	$(CL) $(LDFLAGS) /Fe$(FICUS0) $(LDLIBS) %OBJS:$(BOOTSTRAP_SRC)=$(BOOTSTRAP_BUILD_DIR)% $(BOOTSTRAP_BUILD_DIR)/libficus.obj
+$(BOOTSTRAP_BUILD_DIR)/fx.o: $(BOOTSTRAP_SRC)/fx.c $(RUNTIME_DEPS) $(RUNTIME_IMPL_DEPS)
+	@echo CC fx.c
+	@echo CC fx.c
+	@$(CC) $(CFLAGS) $@ $<
 
-{$(BOOTSTRAP_SRC)}.c{$(BOOTSTRAP_BUILD_DIR)}.obj:
-	@$(CL) $(CFLAGS) /Ob2 /c /Fo$@ $<
+$(BOOTSTRAP_BUILD_DIR)/libficus.o: $(RUNTIME_LIBFICUS_C) $(RUNTIME_DEPS) $(RUNTIME_IMPL_DEPS)
+	@echo CC libficus.c
+	@echo @$(CC) $(CFLAGS) $@ $<
+	@$(CC) $(CFLAGS) $@ $<
 
-{$(RUNTIME_DIR)/impl}.c{$(BOOTSTRAP_BUILD_DIR)}.obj:
-	@$(CL) $(CFLAGS) /c /Fo$@ $<
+$(BOOTSTRAP_BUILD_DIR)/%.o: $(BOOTSTRAP_SRC)/%.c $(RUNTIME_DEPS) | $(BOOTSTRAP_BUILD_DIR)
+	@echo CC $<
+	@$(CC) $(CFLAGS) $@ $<
 
-$(FICUS): $(FICUS0) $(SRC1)
-	@$(FICUS0:/=\) $(FICUS_FLAGS) -o $(FICUS_BIN)/ficus $(FICUS_SRC)/fx.fx
+$(FICUS): $(FICUS0) $(FICUS_SRCS) $(FICUS_STDLIB_SRCS)
+	@echo "$(COLOR_INFO)Building fresh compiler from the actual ficus sources$(COLOR_NORMAL)"
+	@echo #define FX_GIT_COMMIT "$(GIT_COMMIT)" > $(RUNTIME_DIR)/version.git_commit
+ifeq ($(wildcard $(FICUS_BIN)/.),"")
+	@$(MKDIR) $(FICUS_BIN)
+endif
+	@echo $(FICUS0) $(FICUS_FLAGS) -o $(FICUS) $(FICUS_SRC)/fx.fx
+	@$(FICUS0) $(FICUS_FLAGS) -o $(FICUS) $(FICUS_SRC)/fx.fx
 
-final_note:
+$(BOOTSTRAP_BUILD_DIR):
+	@echo "$(COLOR_INFO)Building reference compiler from the pre-generated .c sources$(COLOR_NORMAL)"
+	$(shell if not exist "$(FICUS_BIN)" $(MKDIR) $(FICUS_BIN))
+	$(shell if not exist "$(BUILD_DIR)" $(MKDIR) $(BUILD_DIR))
+	$(shell if not exist "$(BOOTSTRAP_BUILD_DIR)" $(MKDIR) $(BOOTSTRAP_BUILD_DIR))
+
+final_note: | $(FICUS)
 	@echo ""
-	@echo "./bin/ficus was built successfully."
+	@echo "$(COLOR_OK)./bin/ficus was built successfully.$(COLOR_NORMAL)"
 	@echo "Now setup 'FICUS_PATH=<path_to_stdlib>' (lib subdirectory of the root directory)"
 	@echo "and optionally 'FICUS_CFLAGS' and 'FICUS_LINK_LIBRARIES' to pass to C compiler."
 	@echo "After that you can copy ficus to whatever directory you want and use it."
 	@echo "When compiling an application, ficus creates __fxbuild__/<appname> subdirectory"
-	@echo "in the current directory for the intermediate .obj and .o files,"
+	@echo "in the current directory for the intermediate .c and .o files,"
 	@echo "as well as the produced application".
+
+doc: ficustut_a4.pdf
+
+ficustut_a4.pdf: doc/ficustut.md doc/fxtemplate.latex Makefile
+	pandoc -f markdown --pdf-engine=xelatex --resource-path=doc:. -V geometry:margin=1in -V mainfont='Source Serif Pro' -V fontsize=11pt -V monofont='IBM Plex Mono' -V documentclass=article -V papersize=A4 -V urlcolor=red -V title="Ficus programming language" -V author="Vadim Pisarevsky" --listings --template doc/fxtemplate.latex -o doc/ficustut_a4.pdf doc/ficustut.md
+
+clean:
+	@$(RM) $(BOOTSTRAP_BUILD_DIR)
+	@$(RM) $(BUILD_DIR)/ficus
+	@$(RM) $(FICUS)
+	@$(RM) doc/ficustut_a4.pdf

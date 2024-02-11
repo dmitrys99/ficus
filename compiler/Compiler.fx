@@ -389,16 +389,16 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
 
     val (_, c_comp, cpp_comp, obj_ext, obj_opt, appname_opt, link_lib_opt, cflags, clibs) =
         if Sys.win32 {
-            val omp_flag = ""//if enable_openmp {" /openmp"} else {""}
+            val omp_flag = if enable_openmp {" -fopenmp"} else {""}
             val opt_flags =
                 if opt_level == 0 {
-                    " /D_DEBUG /MTd /Od /GF"
+                    " -D_DEBUG -O0"
                 } else {
-                    " /DNDEBUG /MT " + (if opt_level == 1 {"/O1"} else {"/O2"})
+                    " -DNDEBUG " + (if opt_level == 1 {"-O1"} else {"-O2"})
                 }
-            val incdirs = " ".join([::for d <- Ast.all_c_inc_dirs.list() {"/I"+d}])
-            val cflags = f"-march=native /utf-8 /nologo{opt_flags}{omp_flag} {incdirs} /I{runtime_include_path}"
-            ("win", "clang-cl", "clang-cl", ".obj", "/c /Fo", "/Fe", "", cflags, "/nologo /F10485760 kernel32.lib advapi32.lib")
+            val incdirs = " ".join([::for d <- Ast.all_c_inc_dirs.list() {"-I"+d}])
+            val cflags = f"{opt_flags}{omp_flag} {incdirs} -march=native -I{runtime_include_path}"
+            ("win", "clang", "clang", ".obj", "-c -o", "-o", omp_flag, cflags, "-lkernel32.lib -ladvapi32.lib")
         } else {
             // unix or hopefully something more or less compatible with it
             val c_comp = Sys.getenv("CC", "cc")
@@ -511,6 +511,7 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
                         }
                         p.pclose_exit_status() == 0
                     } else {
+			pr_verbose(f"HIA: cmd = {cmd}")
                         Sys.command(cmd) == 0
                     }
                 val status = if result {clrmsg(MsgGreen, "ok")} else {clrmsg(MsgRed, "fail")}
@@ -547,7 +548,7 @@ fun run_cc(cmods: C_form.cmodule_t list, ficus_root: string) {
         pr_verbose(f"Linking the app with flags={clibs}")
         val cmd = (if any_cpp {cpp_comp} else {c_comp}) + " " + appname_opt + Options.opt.app_filename
         val cmd = cmd + " " + " ".join(objs) + " " + clibs
-        pr_verbose(f"{cmd}\n")
+        pr_verbose(f"HIA:2 {cmd}\n")
         val ok = Sys.command(cmd) == 0
         ok
     }
@@ -558,6 +559,7 @@ fun run_app(): bool
     val appname = Options.opt.app_filename
     val appname = Filename.normalize(Filename.getcwd(), appname)
     val cmd = " ".join(appname :: Options.opt.app_args)
+    pr_verbose(f"HIA: 3 {cmd}")
     Sys.command(cmd) == 0
 }
 
