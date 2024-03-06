@@ -170,8 +170,8 @@ static void _fx_gemm_pack##N##suffix( int_ m, int_ k, const void* A_, \
     _mm_storeu_ps((dst) + 8, y2)
 
 #define _FX_GEMM_PACK_f32f16_8(src, dst) \
-    __m128i x0 = _mm_loadu_ps((src)); \
-    __m128i x1 = _mm_loadu_ps((src) + 4); \
+    __m128 x0 = _mm_loadu_ps((src)); \
+    __m128 x1 = _mm_loadu_ps((src) + 4); \
     __m128i y0 = _mm_cvtps_ph(x0, 0); \
     __m128i y1 = _mm_cvtps_ph(x1, 0); \
     _mm_storeu_si128((__m128i*)(dst), _mm_unpacklo_epi64(y0, y1))
