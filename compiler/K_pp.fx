@@ -20,7 +20,7 @@ val pp_ = Ast.pp
 @private fun pp_id_(pp: PP.t, n: id_t, loc: loc_t) = pp.str(idk2str(n, loc))
 
 @private fun get_ktyp_pr(t: ktyp_t): int {
-    | KTypInt | KTypLong | KTypCInt | KTypSInt _ | KTypUInt _ | KTypFloat _
+    | KTypInt | KTypCInt | KTypSInt _ | KTypUInt _ | KTypFloat _
     | KTypString | KTypChar | KTypBool | KTypVoid | KTypExn
     | KTypErr | KTypCPointer | KTypModule | KTypName _
     | KTypTuple _ | KTypRecord _ => 3
@@ -54,7 +54,6 @@ val pp_ = Ast.pp
 
     match t {
     | KTypInt  => pp.str("int")
-    | KTypLong  => pp.str("long")
     | KTypCInt  => pp.str("int32")
     | KTypSInt b => pp.str(f"int{b}")
     | KTypUInt b => pp.str(f"uint{b}")
