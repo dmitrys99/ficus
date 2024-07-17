@@ -1,0 +1,169 @@
+
+
+context default
+
+    keyword whole as yellow
+    keyword whole break yellow
+    keyword whole catch yellow
+    keyword whole class yellow
+    keyword whole continue yellow
+    keyword whole do yellow
+    keyword whole else yellow
+    keyword whole exception yellow
+    keyword whole false white
+    keyword whole finally yellow
+    keyword whole fold yellow
+    keyword whole for yellow
+    keyword whole from yellow
+    keyword whole fun yellow
+    keyword whole if yellow
+    keyword whole import yellow
+    keyword whole inf yellow
+    keyword whole inff yellow
+    keyword whole interface yellow
+    keyword whole match yellow
+    keyword whole nan yellow
+    keyword whole nanf yellow
+    keyword whole null white
+    keyword whole operator yellow
+    keyword whole ref yellow
+    keyword whole return yellow
+    keyword whole throw yellow
+    keyword whole true white
+    keyword whole try yellow
+    keyword whole type yellow
+    keyword whole val yellow
+    keyword whole var yellow
+    keyword whole when yellow
+    keyword whole while yellow
+
+    keyword whole @ccode brightred
+    keyword whole @data brightred
+    keyword whole @inline brightred
+    keyword whole @nothrow brightred
+    keyword whole @pragma brightred
+    keyword whole @parallel brightred
+    keyword whole @private brightred
+    keyword whole @pure brightred
+    keyword whole @sync brightred
+    keyword whole @text brightred
+    keyword whole @unzip brightred
+
+    keyword whole int8 cyan
+    keyword whole uint8 cyan
+    keyword whole int16 cyan
+    keyword whole uint16 cyan
+    keyword whole int32 cyan
+    keyword whole uint32 cyan
+    keyword whole int cyan
+    keyword whole uint64 cyan
+    keyword whole int64 cyan
+    keyword whole half cyan
+    keyword whole float cyan
+    keyword whole double cyan
+    keyword whole bool cyan
+    keyword whole string cyan
+    keyword whole char cyan
+    keyword whole list cyan
+    keyword whole vector cyan
+    keyword whole cptr cyan
+    keyword whole exn cyan
+
+    keyword whole /\* brown
+    keyword whole \*/ brown
+    keyword whole // brown
+
+    keyword whole | gray
+
+    keyword whole _ green
+
+    keyword ! yellow
+    keyword % yellow
+    keyword && yellow
+    keyword & brightmagenta
+    keyword ( brightcyan
+    keyword ) brightcyan
+#    keyword \* yellow
+#    keyword \+ yellow
+    keyword , brightcyan
+#    keyword - yellow
+#    keyword / yellow
+    keyword :: gray
+    keyword : brightcyan
+    keyword ; brightmagenta
+#    keyword < yellow
+#    keyword = yellow
+#    keyword > yellow
+#    keyword ? brightcyan
+    keyword [ brightgreen
+    keyword ] brightgreen
+#    keyword ^ brightmagenta
+    keyword { brightcyan
+#    keyword || yellow
+    keyword } brightcyan
+#    keyword ~ brightmagenta
+
+    keyword => gray
+    keyword <- gray
+
+    keyword \+ yellow
+    keyword − yellow
+    keyword \* yellow
+    keyword / yellow
+    keyword % yellow
+    keyword \*\* yellow
+
+    keyword .\+ gray
+    keyword .- gray
+    keyword .\* gray
+    keyword ./ gray
+    keyword .\*\* gray
+
+    keyword == yellow
+    keyword != yellow
+    keyword > yellow
+    keyword < yellow
+    keyword <= yellow
+    keyword >= yellow
+    keyword <=> yellow
+    keyword === yellow
+
+    keyword .== gray
+    keyword .!= gray
+    keyword .> gray
+    keyword .< gray
+    keyword .<= gray
+    keyword .>= gray
+    keyword .<=> gray
+# & | ^ >> << \
+# // other binary operators
+# .{...}
+    keyword = yellow
+    keyword \+= yellow
+    keyword −= yellow
+    keyword \*= yellow
+    keyword /= yellow
+    keyword %= yellow
+    keyword &= yellow
+    keyword |= yellow
+    keyword ^= yellow
+    keyword >>= yellow
+    keyword <<= yellow
+# .={...}
+# && || :: :>
+
+    keyword f" green
+    keyword " green
+
+context exclusive /\* \*/ brown
+    spellcheck
+
+context exclusive // \n brown
+    spellcheck
+
+context exclusive f" " magenta
+    spellcheck
+    keyword { brightred
+    keyword } brightred
+
+context exclusive " " green
