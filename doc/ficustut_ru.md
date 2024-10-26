@@ -207,22 +207,24 @@ $ ficus -h
   * 8-, 16-, 32- или 64-битные, знаковые или беззнаковые целые (литералы типов `int8`, `uint8`, `int16`, `uint16`, `int32`, `uint32`, `int`, `uint64`, `int64` cсоответственно), 16-, 32- или 64-битные числа с плавающей точкой (типов `half`, `float` и `double` соответственно):
 
     ```
-    42    // десятичное число
-    0xffu8 // 8-битное беззнаковое число в шестнадцатеричной нотации
+    42         // десятичное число
+    0xffu8     // 8-битное беззнаковое число в шестнадцатеричной нотации
+
     12345678987654321i64 // 64-битное целое,
-                         // суффикс i... обозначает литерал n-битного знакового целого
-                         // суффикс u... обозначает литерал n-битного беззнакового целого
-    0777  // восьмеричное число
+               // суффикс i... обозначает литерал n-битного знакового целого
+               // суффикс u... обозначает литерал n-битного беззнакового целого
+
+    0777       // восьмеричное число
     0b11110000 // целое в двоичной нотации
-    3.14  // число с плавающей точкой двойной точности
-    1e-5f // число с плавающей точкой одинарной точности 
-          // в экспоненциальной нотации
-    0.25h // 16-битное число с плавющей точкой
-          // (пока такие числа реально в Ficus не поддерживаются)
-    nan   // особый литерал 'not a number' (не число) двойной точности
-          // добавление суффикса 'f' дает 'nan' одинарной точности
-    -inff // литерал '-infinity' (минус бесконечность) одинарной точности
-          // удаление суффикса 'f' дает значение двойной точности.
+    3.14       // число с плавающей точкой двойной точности
+    1e-5f      // число с плавающей точкой одинарной точности 
+               // в экспоненциальной нотации
+    0.25h      // 16-битное число с плавющей точкой
+               // (пока такие числа реально в Ficus не поддерживаются)
+    nan        // особый литерал 'not a number' (не число) двойной точности
+               // добавление суффикса 'f' дает 'nan' одинарной точности
+    -inff      // литерал '-infinity' (минус бесконечность) одинарной точности
+               // удаление суффикса 'f' дает значение двойной точности.
     ```
 
   * логические значения (типа `bool`)
@@ -239,11 +241,10 @@ $ ficus -h
     "hello, world!\n" //  поддерживаются обычные ESC-последовательности в стиле C
 
     /*
-      Non-ASCII characters are captured properly
-      from UTF8-encoded source,
-      and then stored and processed as
-      unicode (4-byte) characters.
-      That is, the code will output 9
+      Не-ASCII символы корректно разбираются из
+      UTF-8 и затем сохраняются и обрабатываются
+      как Unicode (4-байтные) символы.
+      Код ниже выведет 9
     */
     println(length("привет! \U0001F60A"))
 
@@ -253,6 +254,14 @@ $ ficus -h
     // \xXX — 2-digit hexadecimal ASCII codes,
     // \uXXXX — 4-digit hexadecimal Unicode value
     // \UXXXXXXXX — 8-digit hexedecimal Unicode value
+    /*
+      Возможно включение произвольных символов
+      с помощью ASCII или Unicode значений:
+      \ooo       — 1-3-разрядный восьмеричный ASCII код,
+      \xXX       — 2-разрядный шестнадцатеричный ASCII код,
+      \uXXXX     — 4-разрядный шестнадцатеричный Unicode код,
+      \UXXXXXXXX — 8-разрядный шестнадцатеричный Unicode код,
+    */
     "Hola \U0001F60A"
 
     // Similar to Python, f-strings may embed expression values using {} string interpolation construction
@@ -297,27 +306,29 @@ $ ficus -h
       r"(?:val|var)\s+([\a_]\w+)\s*=\s*(\d+|\w+)")
     ```
 
-  * characters (of type `char`) — this is what the text strings are made of. Character literals look exactly like single-line text literals, but are enclosed into single quotes.
+  * символы (типа `char`) — то, из чего сделаны текстовые строки. Символьные литералы выглядять также как односимвольные текстовые литералы, включенные в одиночные кавычки.
 
     ```
     chr(ord('A')) == 'A' // ~ true
     ```
 
-  * polymorphic literal — an empty list, vector or 1D, 2D etc. array (of type `'t list`, `'t vector`, `t []`, `t [,]` etc., respectively)
+  * полиморфные литералы — пустой список, вектор или 1-, 2- и более мерные массивы (типов `'t list`, `'t vector`, `t []`, `t [,]` и пр. соответственно)
 
     ```
     []
     ```
 
-  * null C-pointer (see the section about interaction with C/C++)
+  * нулевой указатель null (смотри секцию взаимодействия с C/C++)
 
     ```
     null
     ```
 
-* **identifiers** — they denote all the named entities, built-in or defined in the code: values, variables, functions, types, exceptions, variant tags etc. An identifier starts with the underscore `_` or a letter (Latin or not) and contains zero or more subsequent underscores, letters or decimal digits, i.e. it can be defined with the following regular expression: `[\a_]\w+`. Identifier `_` has a special meaning. It denotes an unused function parameter or, in general, element of a pattern that user does not care of (patterns are discussed further in this document).
+* **идентификаторы** — определяют все именованные сущности, встроенные или определенные, в коде: значения, переменные, функции, типы, исключения, вариантные теги и др. Идентификатор начинается с подчеркивания `_` или буквы (латинской или нет) и содержит 0 и более последовательных подчеркиваний, букв или десятичных цифр, т.е. идентификатор может быть определен регулярным выражением `[\a_]\w+`. Идентификатор `_` имеет особое значение, он определяет неиспользуемый параметр функции или, в общем случае, элемент шаблона, который пользователь проигнорировал (шаблоны обсуждаются далее в этом документе).
 
-* **keywords** — they look like identifiers and are used to form various syntactic constructions. You may not have an identifier with the same name as keyword. Here is a list of Ficus keywords:
+* **ключевые слова** — выглядят как идентификаторы и используются для формирования синтаксических конструкций. Нельзя использовать идентификатор с тем же именем, что и ключевое слово.
+
+Список ключевых слов Ficus:
 
   ```
   as break catch class continue do else exception
@@ -326,21 +337,24 @@ $ ficus -h
   true try type val var when while
   ```
 
-  There are also **attribute-keywords** that start with `@` and are used to describe various properties of defined symbols, for-loops, code blocks etc. Here they are:
+  Также есть **атрибуты**, начинающиеся с `@`. Они используются для задания свойств определяемых символов, циклов, блоков кода и др. 
+
+  Перечень атрибутов:
 
   ```
   @ccode @data @inline @nothrow @pragma
   @parallel @private @pure @sync @text @unzip
   ```
 
-  The names of standard data types can also be treated as keywords:
+  Имена стандартных типов трактуются как ключевые слова:
 
   ```
   int8 uint8 int16 uint16 int32 uint32 int uint64 int64
   half float double bool string char list vector cptr exn
   ```
 
-  But the important difference is that it's possible to define a function or a value with the name that matches the standard data type. In particular, it's the common practice — to give the name of target datatype to the type cast function:
+  Важно заметить, что можно определить функцию или значение с названием, совпадающем со стандартными типами данных. В частности, общей практикой является присвоение имен целевых типов для фукнций преобразования типов:
+
 
   ```
   fun string(set: 't Set.t) =
@@ -349,21 +363,21 @@ $ ficus -h
   fun double(r: ratio_t) = double(r.n)/r.d
   ```
 
-* **operators**
+* **операторы**
 
-  There are quite a few operators, binary and unary.
+  Есть некоторое количество унарных и бинарных операторов:
 
-  **Binary**:
+  **бинарные**:
 
   ```
-  // overridable binary operators
+  // переопределяемые бинарные операторы
   + − * / % **
   .+ .- .* ./ .**
   == != > < <= >= <=> ===
   .== .!= .> .< .<= .>= .<=>
   & | ^ >> << \
 
-  // other binary operators
+  // другие бинарные операторы
   .{...}
 
   = += −= *= /= %= &= |= ^= >>= <<=
@@ -372,20 +386,20 @@ $ ficus -h
   && || :: :>
   ```
 
-  **Unary**
+  **унарные**
 
   ```
-  // overridable prefix operator
+  // переопределяемые префиксные операторы
   ~
-  // other prefix operators
+  // другие префиксные операторы
   + − *
   .- ! \
 
-  // overridable postfix operator
+  // переопределяемые постфиксные операторы
   '
   ```
 
-  The overridable operators can be enclosed into `()` and be used as identifiers, e.g. to pass to a higher-level function. Also, such operators can be overridden using `operator` keyword:
+  Переопределяемые операторы можно заключить в скобки `()` и использовать как идентификаторы, например для передачи в функцию. Еще такие операторы можно переопределять с помощью ключевого слова `operator`:
 
   ```
   type ratio = { n: int; d: int }
@@ -398,13 +412,12 @@ $ ficus -h
   val sorted = [R(1,2), R(3,5), R(2,3)].sort((<))
   ```
 
-* There are also various **delimiters** and **parentheses**
+* Есть также **разделители** и **скобки**
 
   ```
   -> => <- @ . , : ; [ ] ( ) { }
   ```
 
-All these operators will be explained later in the tutorial.
+Операторы будут подробно разъяснены позже в этом руководстве.
 
-Now let's make a step up and see how various language constructions are composed out of the tokens
-
+Далее посмотрим как конструкции языка составляются из токенов.
