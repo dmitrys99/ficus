@@ -248,12 +248,6 @@ $ ficus -h
     */
     println(length("привет! \U0001F60A"))
 
-    // It's possible to embed particular characters
-    // using their ASCII or Unicode value:
-    // \ooo — 1-3 digit octadecimal ASCII codes,
-    // \xXX — 2-digit hexadecimal ASCII codes,
-    // \uXXXX — 4-digit hexadecimal Unicode value
-    // \UXXXXXXXX — 8-digit hexedecimal Unicode value
     /*
       Возможно включение произвольных символов
       с помощью ASCII или Unicode значений:
@@ -265,43 +259,45 @@ $ ficus -h
     "Hola \U0001F60A"
 
     // Similar to Python, f-strings may embed expression values using {} string interpolation construction
+    // Как и в Python, внутри f-строки с помощью интерполяции {} можно использовать значения
     val r = 10
-    println(f"a circle with R={r} has area={3.1415926*r*r}")
-    // the line above is converted by the parser to
-    println("a circle with R=" + string(r) +
-           " has area=" + string(3.1415926*r*r))
+    println(f"площадь окружности радиуса R={r} составляет={3.1415926*r*r}")
+    // строка выше преобразуется парсером в 
+    println("площадь окружности радиуса R=" + string(r) +
+           " составляет=" + string(3.1415926*r*r))
 
-    // therefore, custom objects can also be interpolated
-    // once you've provided string() function for them:
+    // поэтому пользовательские объекты также можно интерполировать,
+    // предоставляя для них функцию string():
     type point = { x: int; y: int }
-    // note that to avoid confusion, literal '{' and '}'
-    // need to be duplicated in f-strings
+
+    // дабы избежать путаницы, литералы '{' and '}'
+    // в f-строке необходимо продублировать
     fun string(p: point) = f"{{x={p.x}, y={p.y}}}"
     val pt = point { x=10, y=5 }
     println(f"pt={pt}")
 
-    // Multi-line string literals are possible too:
-    // By default, end-of-line characters in the produced
-    // string are retained. \r\n is replaced with \n for
-    // cross-platform compatibility.
+    // Возможно использование многострочных строковых литералов.
+    // По умолчанию символы конца строки в сгенерированной строке сохраняются.
+    // \r\n заменяются на \n для кросс-платформенной совместимости.
     val author="anonymous"
-    f"multi-line
-      strings
-        are
-      delimited
-     by quotes, just like the normal string literals
-       and can also embed some values.
+    f"многострочные
+      строковые 
+        литералы
+      ограничены
+     кавычками, как обычные строковые литералы
+       и могут включать в себя значения
             {author}
     "
-    // Put \ before a newline to remove this newline and
-    // the subsequent spaces from the literal
-    val errmsg = "A very long and \
-       detailed error message explaining \
-       what's going wrong."
+    
+    // Добавьте \ перед концом строки,
+    // чтобы удалить его и последующие пробелы из литерала
+    val errmsg = "Очень длинное и \
+       детализированное сообщение об ошибке, \
+       описывающее, что же пошло не так."
 
-    // r-string literals are mostly used for regular expressions,
-    // because they let to specify character classes and other
-    // special symbols without duplicating '\'
+    // r-строки в основном используются для регулярных выражений,
+    // поскольку в них можно указывать символьные классы
+    // и другие спецсимволы без дублирования '\'
     val assigment_regexp = Re.compile(
       r"(?:val|var)\s+([\a_]\w+)\s*=\s*(\d+|\w+)")
     ```
