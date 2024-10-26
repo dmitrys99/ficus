@@ -197,3 +197,214 @@ $ ficus -h
     ```
     mymatrix[i, j]
     ```
+
+## Токены
+
+В Ficus используются следующие типы токенов:
+
+* **литералы**, представляющие разнообразные скалярные значения:
+
+  * 8-, 16-, 32- или 64-битные, знаковые или беззнаковые целые (литералы типов `int8`, `uint8`, `int16`, `uint16`, `int32`, `uint32`, `int`, `uint64`, `int64` cсоответственно), 16-, 32- или 64-битные числа с плавающей точкой (типов `half`, `float` и `double` соответственно):
+
+    ```
+    42    // десятичное число
+    0xffu8 // 8-битное беззнаковое число в шестнадцатеричной нотации
+    12345678987654321i64 // 64-битное целое,
+                         // суффикс i... обозначает литерал n-битного знакового целого
+                         // суффикс u... обозначает литерал n-битного беззнакового целого
+    0777  // восьмеричное число
+    0b11110000 // целое в двоичной нотации
+    3.14  // число с плавающей точкой двойной точности
+    1e-5f // число с плавающей точкой одинарной точности 
+          // в экспоненциальной нотации
+    0.25h // 16-битное число с плавющей точкой
+          // (пока такие числа реально в Ficus не поддерживаются)
+    nan   // особый литерал 'not a number' (не число) двойной точности
+          // добавление суффикса 'f' дает 'nan' одинарной точности
+    -inff // литерал '-infinity' (минус бесконечность) одинарной точности
+          // удаление суффикса 'f' дает значение двойной точности.
+    ```
+
+  * логические значения (типа `bool`)
+
+    ```
+    true
+    false
+    ```
+
+  * текстовые строки (типа `string`)
+
+    ```
+    "abc"
+    "hello, world!\n" //  поддерживаются обычные ESC-последовательности в стиле C
+
+    /*
+      Non-ASCII characters are captured properly
+      from UTF8-encoded source,
+      and then stored and processed as
+      unicode (4-byte) characters.
+      That is, the code will output 9
+    */
+    println(length("привет! \U0001F60A"))
+
+    // It's possible to embed particular characters
+    // using their ASCII or Unicode value:
+    // \ooo — 1-3 digit octadecimal ASCII codes,
+    // \xXX — 2-digit hexadecimal ASCII codes,
+    // \uXXXX — 4-digit hexadecimal Unicode value
+    // \UXXXXXXXX — 8-digit hexedecimal Unicode value
+    "Hola \U0001F60A"
+
+    // Similar to Python, f-strings may embed expression values using {} string interpolation construction
+    val r = 10
+    println(f"a circle with R={r} has area={3.1415926*r*r}")
+    // the line above is converted by the parser to
+    println("a circle with R=" + string(r) +
+           " has area=" + string(3.1415926*r*r))
+
+    // therefore, custom objects can also be interpolated
+    // once you've provided string() function for them:
+    type point = { x: int; y: int }
+    // note that to avoid confusion, literal '{' and '}'
+    // need to be duplicated in f-strings
+    fun string(p: point) = f"{{x={p.x}, y={p.y}}}"
+    val pt = point { x=10, y=5 }
+    println(f"pt={pt}")
+
+    // Multi-line string literals are possible too:
+    // By default, end-of-line characters in the produced
+    // string are retained. \r\n is replaced with \n for
+    // cross-platform compatibility.
+    val author="anonymous"
+    f"multi-line
+      strings
+        are
+      delimited
+     by quotes, just like the normal string literals
+       and can also embed some values.
+            {author}
+    "
+    // Put \ before a newline to remove this newline and
+    // the subsequent spaces from the literal
+    val errmsg = "A very long and \
+       detailed error message explaining \
+       what's going wrong."
+
+    // r-string literals are mostly used for regular expressions,
+    // because they let to specify character classes and other
+    // special symbols without duplicating '\'
+    val assigment_regexp = Re.compile(
+      r"(?:val|var)\s+([\a_]\w+)\s*=\s*(\d+|\w+)")
+    ```
+
+  * characters (of type `char`) — this is what the text strings are made of. Character literals look exactly like single-line text literals, but are enclosed into single quotes.
+
+    ```
+    chr(ord('A')) == 'A' // ~ true
+    ```
+
+  * polymorphic literal — an empty list, vector or 1D, 2D etc. array (of type `'t list`, `'t vector`, `t []`, `t [,]` etc., respectively)
+
+    ```
+    []
+    ```
+
+  * null C-pointer (see the section about interaction with C/C++)
+
+    ```
+    null
+    ```
+
+* **identifiers** — they denote all the named entities, built-in or defined in the code: values, variables, functions, types, exceptions, variant tags etc. An identifier starts with the underscore `_` or a letter (Latin or not) and contains zero or more subsequent underscores, letters or decimal digits, i.e. it can be defined with the following regular expression: `[\a_]\w+`. Identifier `_` has a special meaning. It denotes an unused function parameter or, in general, element of a pattern that user does not care of (patterns are discussed further in this document).
+
+* **keywords** — they look like identifiers and are used to form various syntactic constructions. You may not have an identifier with the same name as keyword. Here is a list of Ficus keywords:
+
+  ```
+  as break catch class continue do else exception
+  false finally fold for from fun if import inf inff
+  interface match nan nanf null operator ref return throw
+  true try type val var when while
+  ```
+
+  There are also **attribute-keywords** that start with `@` and are used to describe various properties of defined symbols, for-loops, code blocks etc. Here they are:
+
+  ```
+  @ccode @data @inline @nothrow @pragma
+  @parallel @private @pure @sync @text @unzip
+  ```
+
+  The names of standard data types can also be treated as keywords:
+
+  ```
+  int8 uint8 int16 uint16 int32 uint32 int uint64 int64
+  half float double bool string char list vector cptr exn
+  ```
+
+  But the important difference is that it's possible to define a function or a value with the name that matches the standard data type. In particular, it's the common practice — to give the name of target datatype to the type cast function:
+
+  ```
+  fun string(set: 't Set.t) =
+    join_embrace("{", "}", ", ", set.map(repr))
+  type ratio_t = {n: int; d: int}
+  fun double(r: ratio_t) = double(r.n)/r.d
+  ```
+
+* **operators**
+
+  There are quite a few operators, binary and unary.
+
+  **Binary**:
+
+  ```
+  // overridable binary operators
+  + − * / % **
+  .+ .- .* ./ .**
+  == != > < <= >= <=> ===
+  .== .!= .> .< .<= .>= .<=>
+  & | ^ >> << \
+
+  // other binary operators
+  .{...}
+
+  = += −= *= /= %= &= |= ^= >>= <<=
+  .={...}
+
+  && || :: :>
+  ```
+
+  **Unary**
+
+  ```
+  // overridable prefix operator
+  ~
+  // other prefix operators
+  + − *
+  .- ! \
+
+  // overridable postfix operator
+  '
+  ```
+
+  The overridable operators can be enclosed into `()` and be used as identifiers, e.g. to pass to a higher-level function. Also, such operators can be overridden using `operator` keyword:
+
+  ```
+  type ratio = { n: int; d: int }
+  operator < (r1: ratio, r2: ratio) {
+    val scale = r1.d*r2.d
+    if scale > 0 {r1.n*r2.d < r2.n*r1.d}
+    else {r1.n*r2.d > r2.n*r1.d}
+  }
+  fun R(n: int, d: int) = ratio {n=n, d=d}
+  val sorted = [R(1,2), R(3,5), R(2,3)].sort((<))
+  ```
+
+* There are also various **delimiters** and **parentheses**
+
+  ```
+  -> => <- @ . , : ; [ ] ( ) { }
+  ```
+
+All these operators will be explained later in the tutorial.
+
+Now let's make a step up and see how various language constructions are composed out of the tokens
+
