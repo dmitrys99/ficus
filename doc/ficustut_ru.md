@@ -473,8 +473,6 @@ m3x3[:,:] = m3x3 * m3x3       // заменяем всю матрицу
 m3x3 = m3x3 * m3x3            // ошибка: нельзя переприсвоить значение
 ```
 
-You may ask, why to use values when variables are just as easy to declare and are more flexible? Well, it is much easier for a compiler to optimize the code that uses values rather than variables, it's easier for 3rd-party code analysis tools to check such a code. Also, common wisdom says that a functional-style code that uses mostly immutable values and has few side effects often has less bugs and easier to debug than an imperative code that is basically made of side effects. How far can we get by using just values? In theory (i.e. the lambda calculus), any arbitrarily complex algorithm can be implemented using recursion, immutable data structures and values. For example, here is how you can obtain a sequence of first `n` Fibonacci numbers without using variables:
-
 Можно спросить, зачем использовать значения, когда переменные объявляются почти также и мощнее?
 
 Компилятору значительно проще оптимизировать код со значенимя, чем с переменными, сторонним библиотекам анализа кода значительно проще проверять такой кода. Кроме того, общая практика показывает, что функциональный код с неизменяемыми значениями содержит меньше побочных эффектов и проще в отладке в сравнении с императивным кодом, практически из побочных эффектов и состоящего.
