@@ -1,7 +1,7 @@
 
 # Введение
 
-Ficus -- функциональный язык программирования, поддерживающий императивную и объектно-ориентированную парадигмы программирования. Основная область применения языка Ficus -- вычисления. В языке есть полноценная поддержка многомерных массивов, они могут эффективно обрабатываться в один или несколько потоков. Компилятор Ficus преобразует исхоные файлы .fx и генерирует переносимый код на C/C++. Созданный код хорошо совместим с C и C ++ в обоих направлениях: удобно вызывать код C/C++ из Ficus, также как и вызывать код на C, сгенерированный компилятором Ficus, из пользовательских приложений.
+Ficus &ndash; функциональный язык программирования, поддерживающий императивную и объектно-ориентированную парадигмы программирования. Основная область применения языка Ficus -- вычисления. В языке есть полноценная поддержка многомерных массивов, они могут эффективно обрабатываться в один или несколько потоков. Компилятор Ficus преобразует исхоные файлы .fx и генерирует переносимый код на C/C++. Созданный код хорошо совместим с C и C ++ в обоих направлениях: удобно вызывать код C/C++ из Ficus, также как и вызывать код на C, сгенерированный компилятором Ficus, из пользовательских приложений.
 
 Этот документ дает краткое и, надеюсь, исчерпывающее введение в синтаксис и семантику языка и позволит вам начать с ним работать. Предполагается некоторое базовое знание C/C++ или других языков программирования (C#, Java, Javascript, Python, F#, OCaml, ...), поскольку многие концепции похожи и, вероятно, описаны не очень подробно.
 
@@ -621,18 +621,9 @@ println(if bool(rng) {"головы"} else {"хвосты"})
 | `name1 {name2=exp2,...}` |       ∞   |       N/A       |    запись                 |     создание записи                             |
 
 
+Как и в других языках, приоритеты операций и правила ассоциации часто уменьшают необходимость использования скобок `(` `)`, но при необходимости можете их использовать для изменения порядка вычислений. 
 
-As in the case of other languages, the precedence and associativity rules minimise the use of `(` `)` in many cases, but you can explicitly enclose some sub-expressions into parentheses to change the evaluation order.
+Что обозначает _объединенный тип_ в табице? Это тип, вычисляемый из `T1` и `T2`, достаточно широкий, чтобы избежать (в большинстве случаев) усечения результата операции. Развернутое определение объединения дается в разделе [Числа](#numbers).
 
-What is `coerce(T1, T2)` in the table? This is the type computed out of `T1` and `T2`; it's wide enough to avoid truncation of the operation result (in most cases). See [Numbers](#numbers) section for the comprehensive definition of coercion.
-
-Besides the basic operations shown in the table above, there are many other expressions, described in the respective sections (even though some of them have been mentioned briefly in the table):
-
-* Control flow expressions — described in [Code Blocks and Control Flow Operations](#code-blocks-and-flow-control-operations) section
-* Array construction and access operations, array comprehensions — covered in the [Arrays](#arrays) section
-* Constructing tuples and records, accessing them — see [Tuples and Records](#tuples-and-records)
-* Pattern matching expressions — see [Pattern Matching](#patterns)
-* Constructing and processing variants — see [Sum Types or Variants](#variants)
-* Function and method calls, lambda functions — see [Functions](#functions)
-* Throwing and handling exceptions — see [Exceptions](#exceptions)
+Помимо основных операций, показанных в таблице, есть и другие, описанные в соответствующих разделах.
 
