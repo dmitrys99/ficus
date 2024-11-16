@@ -576,33 +576,33 @@ operator == (a: {...}, b: {...}) =
 operator <=> (a: {...}, b: {...}) =
     fold d=0 for (_, aj) <- a, (_, bj) <- b {if d != 0 {d} else {aj <=> bj}}
 
-operator <=> (a: int, b: int): int = (a > b) - (a < b)
-operator <=> (a: int8, b: int8): int = (a > b) - (a < b)
-operator <=> (a: uint8, b: uint8): int = (a > b) - (a < b)
-operator <=> (a: int16, b: int16): int = (a > b) - (a < b)
+operator <=> (a: int,    b: int): int    = (a > b) - (a < b)
+operator <=> (a: int8,   b: int8): int   = (a > b) - (a < b)
+operator <=> (a: uint8,  b: uint8): int  = (a > b) - (a < b)
+operator <=> (a: int16,  b: int16): int  = (a > b) - (a < b)
 operator <=> (a: uint16, b: uint16): int = (a > b) - (a < b)
-operator <=> (a: int32, b: int32): int = (a > b) - (a < b)
+operator <=> (a: int32,  b: int32): int  = (a > b) - (a < b)
 operator <=> (a: uint32, b: uint32): int = (a > b) - (a < b)
-operator <=> (a: int64, b: int64): int = (a > b) - (a < b)
+operator <=> (a: int64,  b: int64): int  = (a > b) - (a < b)
 operator <=> (a: uint64, b: uint64): int = (a > b) - (a < b)
-operator <=> (a: float, b: float): int = (a > b) - (a < b)
+operator <=> (a: float,  b: float): int  = (a > b) - (a < b)
 operator <=> (a: double, b: double): int = (a > b) - (a < b)
-operator <=> (a: char, b: char): int = (a > b) - (a < b)
-operator <=> (a: bool, b: bool): int = (a > b) - (a < b)
+operator <=> (a: char,   b: char): int   = (a > b) - (a < b)
+operator <=> (a: bool,   b: bool): int   = (a > b) - (a < b)
 
 operator .* (a: ('t...), b: 'ts) = (for aj <- a {aj * b})
 operator ./ (a: ('t...), b: 'ts) = (for aj <- a {aj / b})
 operator .* (a: 'ts, b: ('t...)) = (for bj <- b {a * bj})
 operator ./ (a: 'ts, b: ('t...)) = (for bj <- b {a / bj})
-operator + (a: (...), b: (...)) = (for aj <- a, bj <- b {aj + bj})
-operator - (a: (...), b: (...)) = (for aj <- a, bj <- b {aj - bj})
+operator +  (a: (...), b: (...)) = (for aj <- a, bj <- b {aj + bj})
+operator -  (a: (...), b: (...)) = (for aj <- a, bj <- b {aj - bj})
 operator .+ (a: (...), b: (...)) = (for aj <- a, bj <- b {aj + bj})
 operator .- (a: (...), b: (...)) = (for aj <- a, bj <- b {aj - bj})
 operator .* (a: (...), b: (...)) = (for aj <- a, bj <- b {aj * bj})
 operator ./ (a: (...), b: (...)) = (for aj <- a, bj <- b {aj / bj})
-operator | (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj | bj})
-operator & (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj & bj})
-operator ^ (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj ^ bj})
+operator |  (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj | bj})
+operator &  (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj & bj})
+operator ^  (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj ^ bj})
 
 // complex multiplication
 operator * (a: ('t*2), b: ('t*2)) =
@@ -658,23 +658,23 @@ fun norm(a: ('t...), b: ('t...)) = normL2(a, b)
 
 operator .== (a: ('t...), b: 't): (bool...) = (for aj <- a {aj == b})
 operator .!= (a: ('t...), b: 't): (bool...) = (for aj <- a {aj != b})
-operator .< (a: ('t...), b: 't): (bool...) = (for aj <- a {aj < b})
+operator .<  (a: ('t...), b: 't): (bool...) = (for aj <- a {aj < b})
 operator .<= (a: ('t...), b: 't): (bool...) = (for aj <- a {aj <= b})
-operator .> (a: ('t...), b: 't): (bool ...) = (for aj <- a {aj > b})
+operator .>  (a: ('t...), b: 't): (bool...) = (for aj <- a {aj > b})
 operator .>= (a: ('t...), b: 't): (bool...) = (for aj <- a {aj >= b})
 
 operator .== (b: 't, a: ('t...)): (bool...) = a .== b
 operator .!= (b: 't, a: ('t...)): (bool...) = a .!= b
-operator .< (b: 't, a: ('t...)): (bool...) = a .> b
+operator .<  (b: 't, a: ('t...)): (bool...) = a .>  b
 operator .<= (b: 't, a: ('t...)): (bool...) = a .>= b
-operator .> (b: 't, a: ('t...)): (bool...) = a .< b
+operator .>  (b: 't, a: ('t...)): (bool...) = a .<  b
 operator .>= (b: 't, a: ('t...)): (bool...) = a .<= b
 
 operator .== (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj == bj})
 operator .!= (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj != bj})
-operator .< (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj < bj})
+operator .<  (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj <  bj})
 operator .<= (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj <= bj})
-operator .> (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj > bj})
+operator .>  (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj >  bj})
 operator .>= (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj >= bj})
 
 operator == (a: 't?, b: 't?) {
