@@ -198,3 +198,13 @@ fun getpath(name: string): string list
 }
 
 fun colorterm(): bool = getenv("TERM").contains("xterm")
+
+fun exit(status: int): void = @ccode {
+    exit(status);
+    return FX_OK;
+}
+
+fun exit(): void = @ccode {
+    exit(0);
+    return FX_OK;
+}
