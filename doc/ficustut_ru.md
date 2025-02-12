@@ -758,3 +758,58 @@ fun tabulate(a: double, b: double,
 }]
 val cosine_tab = tabulate(0., 6.28, 256, cos)
 ```
+* **кортеж**: `('t1, 't2, ..., 'tn)`. Экземпляры кортежа создаются, когда несколько значений, разделенных запятыми оборачиваются круглыми скобками. Нет необходимости дополнительно явно определять тип кортежа перед созданием его экземпляра. Индивидуальные элементы кортежа пожно получить с помощью нотации `tuple_val.X`, где X &ndash; целочисленные литерал или с помощь сопоставления с образцом:
+
+```
+val label_color = (0u8, 255u8, 0u8)
+val detected_object_info=((100, 200, 50, 100),
+                        label_color, "пешеход")
+val bounding_box = detected_object_info.0
+val (_, _, label) = detected_object_info // получаем label
+```
+
+Краткая нотация вида `('t * N)`, где N &ndash; целочисленный литерал, может использоваться для определения кортежа с `N` элементами одного типа, например:
+
+```
+fun cmul(a: (float*2), b: (float*2)) =
+ (a.0 * b.0 - a.1 * b.1, a.0 * b.1 + a.1 * b.0)
+```
+* **запись**: `type type_params record_name = { name1: 't1; name2: 't2; ... }`. Записи можно рассматривать как кортежи с именованными элементами. В отличие от кортежей, тип записи должен явно быть объявлен.
+
+```
+type 't point = {x: 't; y: 't}
+
+type rect = { x: int; y: int; width: int; height: int }
+
+type detected_object_info_t // '=' при определении записи можно опустить
+{
+    bounding_box: rect // newline can be used as a separator
+    label_color: (uint8*3)
+    object_class: string
+}
+
+val detected_object_info = detected_object_info_t {
+    bounding_box=rect{x=100, y=200, width=50, height=100},
+    label_color=(0u8, 255u8, 0u8),
+    object_class="pedestrian" }
+
+val bbox = detected_object_info.bounding_box
+val center = (bbox.x + bbox.width/2,
+            bbox.y + bbox.height/2)
+```
+
+* **ссылка**: `'t ref`. Ссылка это структура, выделяемая на куче, содержащее значение определенного типа и счетчик ссылок. Можно читать и изменять сохраненное значение:
+
+```
+var a = "to be" // Инициализируем переменную
+val b = ref a   // Создаем ссылку с тем же значением
+a += " or not to be" // изменяем a, но *b остается тем же самым
+println(*b)     // выводит "to be"
+b = ref "hello" // ошибка: b нельзя присвоить, это значение
+val c = b     // копируем ссылку, делим содержимое
+
+fun append(sr: string ref, delta: string) = *sr += delta
+
+append(c, " or not to be") // корректно, меняем содержимое c (и b)
+println(*b)   // выводи "to be or not to be"
+```
