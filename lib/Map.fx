@@ -70,6 +70,14 @@ match t
 
 fun find_opt(m: ('k, 'd) Map.t, x: 'k): 'd? = find_opt_(m.root, x, m.cmp)
 
+// Overloaded function with exception if no value found
+fun find(m: ('k, 'd) Map.t, xk: 'k): 'd =
+match find_opt(m, xk)
+{
+    | Some(xd) => xd
+    | _ => throw MapError
+}
+
 fun find(m: ('k, 'd) Map.t, xk: 'k, def_xd: 'd): 'd =
 match find_opt(m, xk)
 {
