@@ -188,6 +188,7 @@
         <word name="DateError"/>
         <word name="RBSetError"/>
         <word name="NullQueueError"/>
+        <word name="MapError"/>
         <word name="RBMapError"/>
         <word name="PPStackOverflow"/>
         <word name="PPEmptyStack"/>

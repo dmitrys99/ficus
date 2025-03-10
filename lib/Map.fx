@@ -46,7 +46,7 @@ type color_t = Red | Black
 type ('k,'d) tree_t = Empty | Node: (color_t, ('k,'d) tree_t, 'k, 'd, ('k,'d) tree_t)
 class ('k, 'd) t { root: ('k,'d) tree_t; cmp: 'k cmp_t }
 
-exception RBMapError
+exception MapError
 
 fun empty(cmp: 'k cmp_t): ('k, 'd) Map.t =
     t { root=(Empty : ('k, 'd) tree_t), cmp=cmp }
@@ -176,7 +176,7 @@ match t
         (balance_left(Node(Red, a, xk, xd, b), yk, yd, c), true)
     | Node(Black, Node(Red, a, xk, xd, Node(Black, b, yk, yd, c)), zk, zd, d) =>
         (Node(Black, a, xk, xd, balance_left(Node(Red, b, yk, yd, c), zk, zd, d)), false)
-    | _ => throw RBMapError
+    | _ => throw MapError
 }
 
 @private fun unbalanced_right(t: ('k, 'd) tree_t): (('k, 'd) tree_t, bool) =
@@ -188,7 +188,7 @@ match t
         (balance_right(a, xk, xd, Node(Red, b, yk, yd, c)), true)
     | Node(Black, a, xk, xd, Node(Red, Node(Black, b, yk, yd, c), zk, zd, d)) =>
         (Node(Black, balance_right(a, xk, xd, Node(Red, b, yk, yd, c)), zk, zd, d), false)
-    | _ => throw RBMapError
+    | _ => throw MapError
 }
 
 @private fun remove_min(t: ('k, 'd) tree_t): (('k, 'd) tree_t, 'k, 'd, bool)
@@ -216,7 +216,7 @@ match t
         } else {
             (s, yk, yd, false)
         }
-    | _ => throw RBMapError
+    | _ => throw MapError
 }
 
 @private fun remove_(t: ('k, 'd) tree_t, xk: 'k, cmp: 'k cmp_t): (('k, 'd) tree_t, bool) =
