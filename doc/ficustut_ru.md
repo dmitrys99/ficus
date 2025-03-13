@@ -1045,11 +1045,12 @@ fun print_in_red(msg: string) {
 
 ```
 fun dotprod((x1, y1, z1, w1): (float*4),
-            (x2, y2, z2, w2): (float*4)) =
-    x1*x2 // ошибка: не-void выражение x1*x2
-+ y1*y2 // ошибка: не-void выражение + y1*y2
-+ z1*z2 // ошибка: не-void выражение + z1*z2
-+ w1*w2 // не ошибка, последнее выражение в блоке
+            (x2, y2, z2, w2): (float*4)) {
+    x1*x2 // ошибка: не-void выражение   x1*x2
+  + y1*y2 // ошибка: не-void выражение + y1*y2
+  + z1*z2 // ошибка: не-void выражение + z1*z2
+  + w1*w2 // не ошибка, последнее выражение в блоке
+}
 ```
 
 If you want to insert a non-void expression (e.g. call a function, where you are interested in side effects, not the result), you can use the 2 almost equivalent solutions:
