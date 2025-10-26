@@ -47,6 +47,8 @@ val unix : bool = @ccode {
 #endif
 }
 
+val pathsep = if win32 {';'} else {':'}
+
 fun osname_(): bool -> string
 {
     var osname = ""
@@ -193,8 +195,17 @@ fun getenv(name: string, defval: string)
 
 fun getpath(name: string): string list
 {
-    val pathsep = if win32 {';'} else {':'}
     getenv(name).split(pathsep, allow_empty=false)
 }
 
 fun colorterm(): bool = getenv("TERM").contains("xterm")
+
+fun exit(status: int): void = @ccode {
+    exit(status);
+    return FX_OK;
+}
+
+fun exit(): void = @ccode {
+    exit(0);
+    return FX_OK;
+}

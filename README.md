@@ -28,7 +28,7 @@ Install Visual Studio, for example Visual Studio 2019 Community Edition, open "D
 
 ```
 cd <ficus_root>
-nmake
+nmake -f Makefile.win32
 bin/ficus -run -O3 examples/fst.fx # the usage is the same as on Unix
 ```
 

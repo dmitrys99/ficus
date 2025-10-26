@@ -200,7 +200,6 @@ operator + (l1: 't list, l2: 't list)
 }
 fun string(a: bool) = if a {"true"} else {"false"}
 @pure fun string(a: int): string = @ccode  { return fx_itoa(a, false, fx_result) }
-@pure fun string(a: long): string = @ccode  { return fx_ltoa(a, 'd', false, fx_result) }
 @pure fun string(a: uint8): string = @ccode { return fx_itoa(a, true, fx_result) }
 @pure fun string(a: int8): string = @ccode { return fx_itoa(a, false, fx_result) }
 @pure fun string(a: uint16): string = @ccode { return fx_itoa(a, true, fx_result) }
@@ -428,11 +427,6 @@ fun string(x: uint64, fmt: format_t) = format_(x :> int64, true, fmt)
 fun string(x: float, fmt: format_t) = format_(x :> double, 8, fmt)
 fun string(x: double, fmt: format_t) = format_(x, 16, fmt)
 fun string(x: half, fmt: format_t) = format_(x :> double, 4, fmt)
-@pure fun string(x: long, fmt: format_t): string
-@ccode {
-    FX_STATIC_ASSERT(sizeof(*fmt) == sizeof(fx_format_t));
-    return fx_format_long(x, (fx_format_t*)fmt, fx_result);
-}
 @pure fun string(x: string, fmt: format_t): string
 @ccode {
     FX_STATIC_ASSERT(sizeof(*fmt) == sizeof(fx_format_t));
@@ -582,60 +576,33 @@ operator == (a: {...}, b: {...}) =
 operator <=> (a: {...}, b: {...}) =
     fold d=0 for (_, aj) <- a, (_, bj) <- b {if d != 0 {d} else {aj <=> bj}}
 
-operator <=> (a: int, b: int): int = (a > b) - (a < b)
-operator <=> (a: int8, b: int8): int = (a > b) - (a < b)
-operator <=> (a: uint8, b: uint8): int = (a > b) - (a < b)
-operator <=> (a: int16, b: int16): int = (a > b) - (a < b)
+operator <=> (a: int,    b: int): int    = (a > b) - (a < b)
+operator <=> (a: int8,   b: int8): int   = (a > b) - (a < b)
+operator <=> (a: uint8,  b: uint8): int  = (a > b) - (a < b)
+operator <=> (a: int16,  b: int16): int  = (a > b) - (a < b)
 operator <=> (a: uint16, b: uint16): int = (a > b) - (a < b)
-operator <=> (a: int32, b: int32): int = (a > b) - (a < b)
+operator <=> (a: int32,  b: int32): int  = (a > b) - (a < b)
 operator <=> (a: uint32, b: uint32): int = (a > b) - (a < b)
-operator <=> (a: int64, b: int64): int = (a > b) - (a < b)
+operator <=> (a: int64,  b: int64): int  = (a > b) - (a < b)
 operator <=> (a: uint64, b: uint64): int = (a > b) - (a < b)
-operator <=> (a: float, b: float): int = (a > b) - (a < b)
+operator <=> (a: float,  b: float): int  = (a > b) - (a < b)
 operator <=> (a: double, b: double): int = (a > b) - (a < b)
-operator <=> (a: char, b: char): int = (a > b) - (a < b)
-operator <=> (a: bool, b: bool): int = (a > b) - (a < b)
-@pure @nothrow operator <=> (a: long, b: long): int
-@ccode { return fx_long_cmp(a, b) }
-@pure @nothrow operator == (a: long, b: long): int
-@ccode { return fx_long_cmp(a, b) == 0 }
-
-operator + (a: long, b: long): long
-@ccode { return fx_long_add(a, b, fx_result) }
-operator - (a: long, b: long): long
-@ccode { return fx_long_sub(a, b, fx_result) }
-operator * (a: long, b: long): long
-@ccode { return fx_long_mul(a, b, fx_result) }
-operator / (a: long, b: long): long
-@ccode { return fx_long_div(a, b, fx_result) }
-operator % (a: long, b: long): long
-@ccode { return fx_long_mod(a, b, fx_result) }
-operator & (a: long, b: long): long
-@ccode { return fx_long_and(a, b, fx_result) }
-operator | (a: long, b: long): long
-@ccode { return fx_long_or(a, b, fx_result) }
-operator ^ (a: long, b: long): long
-@ccode { return fx_long_xor(a, b, fx_result) }
-fun __negate__ (a: long): long
-@ccode { return fx_long_neg(a, fx_result) }
-fun abs(a: long): long
-@ccode { return fx_long_abs(a, fx_result) }
-@pure @nothrow fun sign(a: long): int
-@ccode { return fx_long_sign(a, fx_result) }
+operator <=> (a: char,   b: char): int   = (a > b) - (a < b)
+operator <=> (a: bool,   b: bool): int   = (a > b) - (a < b)
 
 operator .* (a: ('t...), b: 'ts) = (for aj <- a {aj * b})
 operator ./ (a: ('t...), b: 'ts) = (for aj <- a {aj / b})
 operator .* (a: 'ts, b: ('t...)) = (for bj <- b {a * bj})
 operator ./ (a: 'ts, b: ('t...)) = (for bj <- b {a / bj})
-operator + (a: (...), b: (...)) = (for aj <- a, bj <- b {aj + bj})
-operator - (a: (...), b: (...)) = (for aj <- a, bj <- b {aj - bj})
+operator +  (a: (...), b: (...)) = (for aj <- a, bj <- b {aj + bj})
+operator -  (a: (...), b: (...)) = (for aj <- a, bj <- b {aj - bj})
 operator .+ (a: (...), b: (...)) = (for aj <- a, bj <- b {aj + bj})
 operator .- (a: (...), b: (...)) = (for aj <- a, bj <- b {aj - bj})
 operator .* (a: (...), b: (...)) = (for aj <- a, bj <- b {aj * bj})
 operator ./ (a: (...), b: (...)) = (for aj <- a, bj <- b {aj / bj})
-operator | (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj | bj})
-operator & (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj & bj})
-operator ^ (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj ^ bj})
+operator |  (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj | bj})
+operator &  (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj & bj})
+operator ^  (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj ^ bj})
 
 // complex multiplication
 operator * (a: ('t*2), b: ('t*2)) =
@@ -691,23 +658,23 @@ fun norm(a: ('t...), b: ('t...)) = normL2(a, b)
 
 operator .== (a: ('t...), b: 't): (bool...) = (for aj <- a {aj == b})
 operator .!= (a: ('t...), b: 't): (bool...) = (for aj <- a {aj != b})
-operator .< (a: ('t...), b: 't): (bool...) = (for aj <- a {aj < b})
+operator .<  (a: ('t...), b: 't): (bool...) = (for aj <- a {aj < b})
 operator .<= (a: ('t...), b: 't): (bool...) = (for aj <- a {aj <= b})
-operator .> (a: ('t...), b: 't): (bool ...) = (for aj <- a {aj > b})
+operator .>  (a: ('t...), b: 't): (bool...) = (for aj <- a {aj > b})
 operator .>= (a: ('t...), b: 't): (bool...) = (for aj <- a {aj >= b})
 
 operator .== (b: 't, a: ('t...)): (bool...) = a .== b
 operator .!= (b: 't, a: ('t...)): (bool...) = a .!= b
-operator .< (b: 't, a: ('t...)): (bool...) = a .> b
+operator .<  (b: 't, a: ('t...)): (bool...) = a .>  b
 operator .<= (b: 't, a: ('t...)): (bool...) = a .>= b
-operator .> (b: 't, a: ('t...)): (bool...) = a .< b
+operator .>  (b: 't, a: ('t...)): (bool...) = a .<  b
 operator .>= (b: 't, a: ('t...)): (bool...) = a .<= b
 
 operator .== (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj == bj})
 operator .!= (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj != bj})
-operator .< (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj < bj})
+operator .<  (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj <  bj})
 operator .<= (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj <= bj})
-operator .> (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj > bj})
+operator .>  (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj >  bj})
 operator .>= (a: ('t...), b: ('t...)): (bool...) = (for aj <- a, bj <- b {aj >= bj})
 
 operator == (a: 't?, b: 't?) {
@@ -783,24 +750,6 @@ fun int64(x: 't) = (x :> int64)
 fun float(x: 't) = (x :> float)
 fun double(x: 't) = (x :> double)
 fun half(x: 't) = (x :> half)
-
-@pure fun int(x: long): int
-@ccode { return fx_ltoi(x, fx_result) }
-
-@pure @nothrow fun long(x: int64): long
-@ccode { FX_MAKE_LONG(x, fx_result); }
-@pure @nothrow fun long(x: uint64): long
-@ccode { FX_MAKE_ULONG(x, fx_result); }
-fun long(x: int8) = long(x :> int64)
-fun long(x: uint8) = long(x :> int64)
-fun long(x: int16) = long(x :> int64)
-fun long(x: uint16) = long(x :> int64)
-fun long(x: int32) = long(x :> int64)
-fun long(x: uint32) = long(x :> int64)
-fun long(x: int) = long(x :> int64)
-fun long(x: bool) = long(x :> int64)
-fun long(x: string): long
-@ccode { return fx_atol(x, 0, fx_result) }
 
 fun int(x: ('t...)) = (for xj <- x {int(xj)})
 fun uint8(x: ('t...)) = (for xj <- x {uint8(xj)})
@@ -992,15 +941,6 @@ fun print(a: 't) = print_string(string(a))
 @nothrow fun print(a: int32): void = @ccode { printf("%d", a) }
 @nothrow fun print(a: uint64): void = @ccode { printf("%llu", a) }
 @nothrow fun print(a: int64): void = @ccode { printf("%lld", a) }
-fun print(a: long): void = @ccode {
-    fx_cstr_t str;
-    int fx_status = fx_ltoa_ascii(a, 'd', false, &str);
-    if (fx_status >= 0) {
-        printf("%s", str.data);
-        fx_free_cstr(&str);
-    }
-    return fx_status;
-}
 @nothrow fun print(a: half): void
 @ccode {
     fx_bits32_t u;

@@ -112,7 +112,6 @@ type ctyp_t =
     | CTypSize_t
     | CTypSInt: int
     | CTypUInt: int
-    | CTypLong
     | CTypFloat: int
     | CTypVoid
     | CTypBool
@@ -592,7 +591,7 @@ fun walk_ctyp(t: ctyp_t, callb: c_callb_t)
     fun walk_ctyp_(t: ctyp_t) = check_n_walk_ctyp(t, callb)
 
     match t {
-    | CTypInt | CTypLong | CTypCInt | CTypSInt _ | CTypUInt _ | CTypFloat _
+    | CTypInt | CTypCInt | CTypSInt _ | CTypUInt _ | CTypFloat _
     | CTypSize_t | CTypVoid | CTypBool | CTypExn | CTypAny
     | CTypUniChar | CTypCSmartPtr | CTypString => t
     | CTypStruct (n_opt, selems) =>
@@ -768,7 +767,7 @@ fun fold_ctyp(t: ctyp_t, callb: c_fold_callb_t)
         }
 
     match t {
-    | CTypInt | CTypLong | CTypCInt | CTypSInt _ | CTypUInt _ | CTypFloat _
+    | CTypInt | CTypCInt | CTypSInt _ | CTypUInt _ | CTypFloat _
     | CTypSize_t | CTypVoid | CTypBool | CTypExn | CTypAny
     | CTypUniChar | CTypString | CTypCSmartPtr =>
         {}
@@ -894,7 +893,6 @@ fun fold_cstmt(s: cstmt_t, callb: c_fold_callb_t)
 fun ctyp2str(t: ctyp_t, loc: loc_t) =
     match t {
     | CTypInt => ("int_", noid)
-    | CTypLong => ("fx_long_t", noid)
     | CTypCInt => ("int", noid)
     | CTypSize_t => ("size_t", noid)
     | CTypSInt b => (f"int{b}_t", noid)

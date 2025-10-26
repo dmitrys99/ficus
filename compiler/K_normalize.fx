@@ -27,7 +27,6 @@ fun typ2ktyp(t: typ_t, loc: loc_t): ktyp_t
         | TypVar _ => throw compile_err(loc,
             "undefined type; use explicit type annotation")
         | TypInt => KTypInt
-        | TypLong => KTypLong
         | TypSInt(b) => KTypSInt(b)
         | TypUInt(b) => KTypUInt(b)
         | TypFloat(b) => KTypFloat(b)

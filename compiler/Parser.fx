@@ -1706,7 +1706,6 @@ fun parse_atomic_typ_(ts: tklist_t): (tklist_t, typ_t)
         val (ts, i) = parse_dot_ident(ts, false, "")
         val t = match i {
             | "int" => TypInt
-            | "long" => TypLong
             | "float" => TypFloat(32)
             | "double" => TypFloat(64)
             | "string" => TypString

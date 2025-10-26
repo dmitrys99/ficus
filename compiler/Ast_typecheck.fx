@@ -134,7 +134,7 @@ fun maybe_unify(t1: typ_t, t2: typ_t, loc: loc_t, update_refs: bool): bool {
                 }
             }
         | TypApp(tl2, _) => occurs(r1, tl2)
-        | TypInt | TypLong | TypSInt _ | TypUInt _ | TypFloat _ | TypString
+        | TypInt | TypSInt _ | TypUInt _ | TypFloat _ | TypString
         | TypChar | TypBool | TypVoid | TypExn | TypErr
         | TypCPointer | TypDecl | TypModule | TypVarRecord =>
             false
@@ -150,7 +150,7 @@ fun maybe_unify(t1: typ_t, t2: typ_t, loc: loc_t, update_refs: bool): bool {
 
     fun maybe_unify_(t1: typ_t, t2: typ_t, loc: loc_t): bool =
         match (t1, t2) {
-        | (TypInt, TypInt) | (TypLong, TypLong) | (TypString, TypString) | (TypChar, TypChar)
+        | (TypInt, TypInt) | (TypString, TypString) | (TypChar, TypChar)
         | (TypBool, TypBool) | (TypVoid, TypVoid) | (TypExn, TypExn)
         | (TypCPointer, TypCPointer) | (TypDecl, TypDecl) | (TypModule, TypModule) => true
         | (TypSInt(bits1), TypSInt(bits2)) => bits1 == bits2
@@ -372,14 +372,6 @@ fun coerce_types(t1: typ_t, t2: typ_t, allow_tuples: bool,
                 throw compile_err(loc, "implicit type coercion for this (unsigned, signed) \
                                   pair of integer is not allowed; use explicit type cast")
             }
-        /*| (TypLong, TypInt) => TypLong
-        | (TypInt, TypLong) => TypLong
-        | (TypLong, TypSInt _) => TypLong
-        | (TypSInt _, TypLong) => TypLong
-        | (TypLong, TypUInt _) => TypLong
-        | (TypUInt _, TypLong) => TypLong
-        | (TypLong, TypFloat(b)) => TypFloat(max(b, 64))
-        | (TypFloat(b), TypLong) => TypFloat(max(b, 64))*/
         | (TypFloat(b1), TypFloat(b2)) when allow_fp => val max_b = max(max(b1, b2), 32); TypFloat(max_b)
         | (TypFloat(b), TypInt) when allow_fp => TypFloat(max(b, 32))
         | (TypFloat(b), TypSInt _) when allow_fp => TypFloat(max(b, 32))
@@ -506,7 +498,6 @@ fun typ_bounds_int(t: typ_t): (int64, int64)
     | TypUInt(16) => (0i64, 65535i64)
     | TypUInt(32) => (0i64, 4294967295i64)
     | TypUInt(64) => (0i64, 9223372036854775807i64)
-    | TypLong => (-9223372036854775807i64, 9223372036854775807i64)
     | TypFloat(16) => (-4096i64, 4096i64)
     | TypFloat(32) => (-16777216i64, 16777216i64)
     | TypFloat(64) => (-9007199254740992i64, 9007199254740992i64)

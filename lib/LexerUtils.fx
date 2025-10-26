@@ -416,7 +416,8 @@ fun getstring_(s: string, pos: int, term: char, raw: bool, fmt: bool):
                 return FX_SET_EXN_FAST(FX_EXN_OutOfMemError);
         }
     }
-    if (i == len)
+    // c != term protects case where string finishes exactly at the end of the input
+    if ((c != term) && (i == len))
         return FX_SET_EXN_FAST(FX_EXN_OverflowError);
     int fx_status = fx_make_str(buf, n, &fx_result->t1);
     if(buf != buf0) fx_free(buf);
