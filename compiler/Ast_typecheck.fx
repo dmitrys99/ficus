@@ -3291,6 +3291,18 @@ fun instantiate_fun_(templ_df: deffun_t ref, inst_ftyp: typ_t, inst_env0: env_t,
     val rt = check_typ(rt, inst_env, df_scope, inst_loc)
     val inst_body = if instantiate { dup_exp(df_body) } else { df_body }
     val (body_typ, body_loc) = get_exp_ctx(inst_body)
+
+    // Если функция содержит единственное выражение
+    // и это выражение - выброс исключения,
+    // тогда typechecker не может вывести тип функции,
+    // поскольку исключение не дает тип, а больше его взять
+    // неоткуда.
+    // В этом случае задаем тип функции явно,
+    // и этот тип - void.
+    val body_typ = match (body_typ, inst_body) {
+        | (TypErr, ExpThrow(_, _)) => TypVoid
+        | _ => body_typ
+    }
     if !is_constr {
         unify(body_typ, rt, body_loc, "the function body type does not match the function type")
     }

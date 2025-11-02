@@ -386,10 +386,16 @@ type defval_t =
 
 type deffun_t =
 {
-    df_name: id_t; df_templ_args: id_t list;
-    df_args: pat_t list; df_typ: typ_t; df_body: exp_t;
-    df_flags: fun_flags_t; df_scope: scope_t list;
-    df_loc: loc_t; df_templ_inst: id_t list ref; df_env: env_t
+    df_name: id_t;
+    df_templ_args: id_t list;
+    df_args: pat_t list;
+    df_typ: typ_t;
+    df_body: exp_t;
+    df_flags: fun_flags_t;
+    df_scope: scope_t list;
+    df_loc: loc_t;
+    df_templ_inst: id_t list ref;
+    df_env: env_t
 }
 
 type defexn_t =
