@@ -385,8 +385,30 @@ fun gen_ccode(cmods: cmodule_t list, kmod: kmodule_t, c_fdecls: ccode_t, mod_ini
         CExp(fx_call_e) :: ccode
     }
 
+    /* Функция add_fx_call1_ формирует вызов функции с учетом информации о стеке вызовов.
+       Для этого в вызов помещаются параметры, содержащие имя функции в коде на Ficus,
+       имя файла и номер строки.
+       Это позволяет правильно показать цепочку вызовов при выбросе исключения.
+
+       TODO Место выброса исключения требует дополнительной обработки и пока не реализовано.
+    */
+    fun add_fx_call1_(f: id_t, call_exp: cexp_t, ccode: ccode_t, lbl: cexp_t, loc: loc_t) {
+        val fx_call_e = make_call(std_FX_CALL1,
+                                  [:: call_exp,
+                                      lbl,
+                                      make_lit_exp(KLitString(pp(f)), loc),
+                                      make_lit_exp(KLitString(filename(loc)), loc),
+                                      make_lit_exp(KLitInt(loc.line0 :> int64), loc)
+                                  ],
+                                  CTypVoid, loc)
+        CExp(fx_call_e) :: ccode
+    }
+
     fun add_fx_call(call_exp: cexp_t, ccode: ccode_t, loc: loc_t) =
         add_fx_call_(call_exp, ccode, curr_block_label(loc), loc)
+
+    fun add_fx_call1(f: id_t, call_exp: cexp_t, ccode: ccode_t, loc: loc_t) =
+        add_fx_call1_(f, call_exp, ccode, curr_block_label(loc), loc)
 
     fun add_local(i: id_t, ctyp: ctyp_t, flags: val_flags_t,
                   e0_opt: cexp_t?, ccode: ccode_t, loc: loc_t): (cexp_t, ccode_t)
@@ -1981,7 +2003,8 @@ fun gen_ccode(cmods: cmodule_t list, kmod: kmodule_t, c_fdecls: ccode_t, mod_ini
                 if is_nothrow {
                     (false, dst_exp, CExp(fcall_exp) :: ccode)
                 } else {
-                    val ccode = add_fx_call(fcall_exp, ccode, kloc)
+                    // CExp(CExpCCode(f"/* fx {kloc} | {pp(f)}*/", kloc)) :: 
+                    val ccode = add_fx_call1(f, fcall_exp, ccode, kloc)
                     (false, dst_exp, ccode)
                 }
             }
