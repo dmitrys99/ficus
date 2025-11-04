@@ -502,6 +502,12 @@ fun string(loc: loc_t)
     f"{fname}:{loc.line0}:{loc.col0}"
 }
 
+fun filename(loc: loc_t)
+{
+    val fname = if loc.m_idx >= 0 {all_modules[loc.m_idx].dm_filename} else {"unknown"}
+    fname
+}
+
 fun new_id_idx(midx: int) {
     if freeze_ids {
         throw Fail("internal error: attempt to add new AST id during K-phase or C code generation phase")

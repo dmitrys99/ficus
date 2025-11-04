@@ -200,6 +200,9 @@ void fx_free(void* ptr);
     if (((ptr)=(ptrtyp)fx_malloc(sizeof(*(ptr)))) != 0) ; else FX_FAST_THROW_RET(FX_EXN_OutOfMemError)
 
 #define FX_CALL(f, label) if((fx_status=(f)) >= 0) ; else { FX_UPDATE_BT(); goto label; }
+// Макрос вызова функции. Отличается от FX_CALL тем, что формирует корректную цепочку
+// стека вызовов, что важно для обработки исключений
+#define FX_CALL1(f, label, fn, file, line) if((fx_status=(f)) >= 0) ; else { FX_UPDATE_BT1(fn, file, line); goto label; }
 // break/continue are execution flow control operators, not real exceptions,
 // and they are guaranteed to be "caught" (one cannot place them outside of loops),
 // so we don't use FX_SET_EXN_EXN_FAST() etc.
@@ -556,8 +559,10 @@ typedef struct fx_exn_t
 
 #if FX_USE_UPDATE_BT
 #define FX_UPDATE_BT() fx_update_bt(__func__, __FILE__, __LINE__)
+#define FX_UPDATE_BT1(fn, file, line) fx_update_bt(fn==0?__func__:fn, file==0?__FILE__:file, line!=-1?line:__LINE__)
 #else
 #define FX_UPDATE_BT()
+#define FX_UPDATE_BT1(fn, file, line)
 #endif
 
 #define FX_MAKE_EXN_IMPL_START(exn_tag, exn_data_t, exn_info) \

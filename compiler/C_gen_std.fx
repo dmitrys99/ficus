@@ -49,6 +49,7 @@ fun init_std_names(): void {
     std_FX_MAKE_FP_IMPL_START = gen_std_macro("FX_MAKE_FP_IMPL_START", 3)
     std_FX_MAKE_FP_BY_FCV = gen_std_macro("FX_MAKE_FP_BY_FCV", 3)
     std_FX_CALL = gen_std_macro("FX_CALL", 2)
+    std_FX_CALL1 = gen_std_macro("FX_CALL1", 5)
     std_FX_COPY_PTR = gen_std_macro("FX_COPY_PTR", 2)
     std_FX_COPY_SIMPLE = gen_std_macro("FX_COPY_SIMPLE", 2)
     std_FX_COPY_SIMPLE_BY_PTR = gen_std_macro("FX_COPY_SIMPLE_BY_PTR", 2)
