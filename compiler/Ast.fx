@@ -498,7 +498,7 @@ var all_c_inc_dirs: string Hashset.t = Hashset.empty(256, "")
 
 fun string(loc: loc_t)
 {
-    val fname = if loc.m_idx >= 0 {all_modules[loc.m_idx].dm_filename} else {"unknown"}
+    val fname = if loc.m_idx >= 0 && loc.m_idx < all_modules.length() {all_modules[loc.m_idx].dm_filename} else {"unknown"}
     f"{fname}:{loc.line0}:{loc.col0}"
 }
 

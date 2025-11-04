@@ -3306,7 +3306,6 @@ fun gen_ccode(cmods: cmodule_t list, kmod: kmodule_t, c_fdecls: ccode_t, mod_ini
                 handle the case of 'c code'-body separately
             */
             val {kf_name, kf_rt, kf_closure, kf_body, kf_cname, kf_flags, kf_loc} = *kf
-            println(f"HIA: kf_name = {pp(kf_name)} kf_loc {kf_loc}")
             val {kci_arg, kci_fcv_t} = kf_closure
             val ctor = kf_flags.fun_flag_ctor
             if kci_arg != noid {
