@@ -1,3 +1,5 @@
-Petr Chekmarev (@4ekmah)        multiple improvements and bug fixes in the compiler and in the standard library;
-                                array processing optimizations, re2 module
-Vadim Pisarevsky (@vpisarev)    the language architect and lead developer
+Dmitry Solomennikov (@dmitrys99) Russian language translation, cross-platform development,
+                                 syntax highlight libraries
+Petr Chekmarev (@4ekmah)         multiple improvements and bug fixes in the compiler and in the standard library;
+                                 array processing optimizations, re2 module
+Vadim Pisarevsky (@vpisarev)     the language architect and lead developer
