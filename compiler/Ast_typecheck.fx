@@ -210,7 +210,7 @@ fun maybe_unify(t1: typ_t, t2: typ_t, loc: loc_t, update_refs: bool): bool {
                 true
             | TypApp(t_args, tn) =>
                 match id_info(tn, loc) {
-                | IdVariant (ref (defvariant_t {dvar_cases=[:: (_, TypRecord _)]})) =>
+                | IdVariant (ref (defvariant_t {dvar_cases=[:: (_, TypRecord _, l)]})) =>
                     undo_stack = (r1, *r1) :: undo_stack
                     *r1 = Some(t2)
                     true
@@ -644,7 +644,7 @@ fun get_record_elems(vn_opt: id_t?, t: typ_t, proto_mode: bool, loc: loc_t): (id
                 }
             }
         match id_info(n, loc) {
-        | IdVariant (ref {dvar_templ_args, dvar_flags, dvar_cases=[:: (vn0, TypRecord (ref (relems, true)))], dvar_loc})
+        | IdVariant (ref {dvar_templ_args, dvar_flags, dvar_cases=[:: (vn0, TypRecord (ref (relems, true)), _)], dvar_loc})
             when dvar_flags.var_flag_record =>
             check_and_norm_tyargs(new_tyargs, dvar_templ_args, dvar_loc, loc)
             if input_vn != noid && input_vn != get_orig_id(vn0) {
@@ -655,11 +655,11 @@ fun get_record_elems(vn_opt: id_t?, t: typ_t, proto_mode: bool, loc: loc_t): (id
         | IdVariant (ref {dvar_name, dvar_templ_args, dvar_cases, dvar_ctors, dvar_loc}) =>
             check_and_norm_tyargs(new_tyargs, dvar_templ_args, dvar_loc, loc)
             val single_case = match dvar_cases { | [:: _] => true | _ => false }
-            val found_case_ctor = find_opt(for (vn, t) <- dvar_cases, c_id <- dvar_ctors {
+            val found_case_ctor = find_opt(for (vn, t, _) <- dvar_cases, c_id <- dvar_ctors {
                     get_orig_id(vn) == input_vn || (single_case && input_vn == noid)
                 })
             match found_case_ctor {
-            | Some(((_, TypRecord(ref (relems, true))), ctor)) => (ctor, relems)
+            | Some(((_, TypRecord(ref (relems, true)), _), ctor)) => (ctor, relems)
             | _ =>
                 val msg = if input_vn == noid {
                         f"variant '{pp(dvar_name)}' is not a record"
@@ -906,7 +906,7 @@ fun check_for_duplicate_fun(ftyp: typ_t, env: env_t, sc: scope_t list, loc: loc_
             if df_scope.hd() == sc.hd() {
                 val (t, _) = preprocess_templ_typ(df_templ_args, df_typ, env, sc, loc)
                 if maybe_unify(t, ftyp, loc, false) && df_templ_args == [] {
-                    throw compile_err( loc, f"the symbol {pp(df_name)} is re-declared \
+                    throw compile_err( loc, f"HIA: 1 the symbol {pp(df_name)} is re-declared \
                         in the same scope; the previous declaration is here: {df_loc}")
                 }
             }
@@ -914,7 +914,7 @@ fun check_for_duplicate_fun(ftyp: typ_t, env: env_t, sc: scope_t list, loc: loc_
             if dexn_scope.hd() == sc.hd() {
                 val t = typ2constr(dexn_typ, TypExn, dexn_loc)
                 if maybe_unify(t, ftyp, loc, false) {
-                    throw compile_err(loc, f"the symbol '{pp(dexn_name)}' is re-declared \
+                    throw compile_err(loc, f"HIA: 2 the symbol '{pp(dexn_name)}' is re-declared \
                         in the same scope; the previous declaration is here {dexn_loc}")
                 }
             }
@@ -2824,8 +2824,8 @@ fun reg_types(eseq: exp_t list, env: env_t, sc: scope_t list)
             val {dvar_name, dvar_templ_args, dvar_flags, dvar_cases, dvar_ifaces, dvar_loc} = *dvar
             val dvar_name1 = dup_id(curr_m_idx, dvar_name)
             val dvar_alias1 = make_default_alias(dvar_templ_args, dvar_name1)
-            val dummy_ctors = [:: for (n, _) <- dvar_cases {n}]
-            *dvar = defvariant_t {
+            val dummy_ctors = [:: for (n, _, l) <- dvar_cases {n}]
+            *dvar = defvariant_t {                           
                 dvar_name=dvar_name1,
                 dvar_templ_args=dvar_templ_args,
                 dvar_alias=dvar_alias1,
@@ -2901,7 +2901,7 @@ fun check_types(eseq: exp_t list, env: env_t, sc: scope_t list) =
         | DefVariant dvar =>
             instantiate_variant(([]: typ_t list), dvar, env, sc, dvar->dvar_loc)
             val {dvar_name, dvar_cases, dvar_ctors, dvar_loc} = *dvar
-            fold env=env for (n, t) <- dvar_cases, ctor_name <- dvar_ctors {
+            fold env=env for (n, t, _) <- dvar_cases, ctor_name <- dvar_ctors {
                 val {df_templ_args, df_typ} =
                     match id_info(ctor_name, dvar_loc) {
                     | IdFun(df) => *df
@@ -3443,7 +3443,7 @@ fun instantiate_fun_body(inst_name: id_t, inst_ftyp: typ_t, inst_args: pat_t lis
             | _ => throw compile_err(inst_loc, "variant is expected here")
             }
             val fold complex_cases = ([]: (pat_t, exp_t) list)
-                for n <- var_ctors, (n_orig, t_orig) <- proto_cases {
+                for n <- var_ctors, (n_orig, t_orig, _) <- proto_cases {
                 val t = deref_typ_rec(t_orig)
                 match t {
                 | TypVoid => complex_cases
@@ -3583,7 +3583,7 @@ fun instantiate_variant(ty_args: typ_t list, dvar: defvariant_t ref,
     }
 
     val (inst_cases, inst_ctors) =
-        [:: @unzip for (n, t)@idx <- dvar_cases, ctor_name <- dvar_ctors {
+        [:: @unzip for (n, t, _)@idx <- dvar_cases, ctor_name <- dvar_ctors {
             val nargs =
                 match t {
                 | TypTuple(telems) => telems.length()
@@ -3618,13 +3618,13 @@ fun instantiate_variant(ty_args: typ_t list, dvar: defvariant_t ref,
                 | _ => throw compile_err(loc, f"invalid constructor {ctor_name} of variant {dvar_name}")
                 }
             }
-            ((n, t), inst_cname)
+            ((n, t, loc), inst_cname)
         } ]
     *inst_dvar = inst_dvar->{dvar_cases=inst_cases, dvar_ctors=inst_ctors, dvar_ifaces=new_ifaces}
     (inst_name, inst_app_typ)
 }
 
-fun get_variant_cases(t: typ_t, loc: loc_t): ((id_t, typ_t) list, id_t list) =
+fun get_variant_cases(t: typ_t, loc: loc_t): ((id_t, typ_t, loc_t) list, id_t list) =
     match deref_typ(t) {
     | TypApp(_, n) =>
         match id_info(n, loc) {
@@ -3690,9 +3690,9 @@ fun check_pat(pat: pat_t, typ: typ_t, env: env_t, idset: idset_t, typ_vars: idse
                 // regardless of how many parameters it has
                 val pl = match pl {
                     | [:: PatAny(any_loc)] =>
-                        match find_opt(for (n, t) <- get_variant_cases(t, loc).0 {
+                        match find_opt(for (n, t, _) <- get_variant_cases(t, loc).0 {
                             get_orig_id(n) == bare_v}) {
-                        | Some((n, t)) =>
+                        | Some((n, t, _)) =>
                             match t {
                             | TypTuple(tl) => [:: for _ <- tl {PatAny(any_loc)}]
                             | TypVoid => []
@@ -3714,7 +3714,8 @@ fun check_pat(pat: pat_t, typ: typ_t, env: env_t, idset: idset_t, typ_vars: idse
                         throw compile_err(loc, "a label of multi-case variant may not \
                                           be used in a formal function parameter")
                     } else {
-                        val ni = match dvar_cases.assoc_opt(bare_v) {
+                        val dvar_cases1 = [:: for (n, t, _) <- dvar_cases { (n, t) }]
+                        val ni = match dvar_cases1.assoc_opt(bare_v) {
                             | Some(TypTuple(tl)) => tl.length()
                             | Some(TypVoid) => throw compile_err(loc, f"a variant label '{pp(v)}' \
                                                     with no arguments may not be used in a formal \

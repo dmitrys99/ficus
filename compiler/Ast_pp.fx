@@ -300,9 +300,9 @@ fun pprint_exp(pp: PP.t, e: exp_t): void
             pp.end()
         }
         pp.str(" ="); pp.space()
-        val ctors = if dvar_ctors != [] { dvar_ctors } else { [:: for (n, t) <- dvar_cases {n}] }
-        for (_, t)@i <- dvar_cases, c <- ctors {
-            pp.begin(); pp.str("| ");
+        val ctors = if dvar_ctors != [] { dvar_ctors } else { [:: for (n, t, l) <- dvar_cases {n}] }
+        for (_, t, l)@i <- dvar_cases, c <- ctors {
+            pp.begin(); pp.str(f"// {l}"); pp.newline(); pp.str("| ");
             ppid(pp, c); pp.str(": "); pp.space();
             pprint_typ(pp, t, dvar_loc); pp.end(); pp.space()
         }

@@ -60,7 +60,7 @@ fun typ2ktyp(t: typ_t, loc: loc_t): ktyp_t
             match t_opt {
             | Some(TypApp([], n)) =>
                 match id_info(n, loc) {
-                | IdVariant (ref {dvar_cases=[:: (_, TypRecord (ref (relems, true)))], dvar_flags})
+                | IdVariant (ref {dvar_cases=[:: (_, TypRecord (ref (relems, true)), _)], dvar_flags})
                     when dvar_flags.var_flag_record =>
                     if id_stack.mem(n) {
                         throw compile_err(loc, f"the record '{n}' directly or indirectly references itself")
@@ -1484,7 +1484,7 @@ fun transform_all_types_and_cons(elist: exp_t list, code: kcode_t, sc: scope_t l
         | DefVariant (ref {dvar_name, dvar_templ_args, dvar_cases, dvar_templ_inst, dvar_scope, dvar_loc}) =>
             val inst_list = if dvar_templ_args == [] { [:: dvar_name] } else { *dvar_templ_inst }
             val tags =
-                [:: for (n, _)@i <- dvar_cases {
+                [:: for (n, _, _)@i <- dvar_cases {
                     if n == noid { noid } else {
                         val tag_id = dup_idk(km_idx, n)
                         val tag_flags = default_val_flags().{val_flag_global=dvar_scope}
@@ -1505,7 +1505,7 @@ fun transform_all_types_and_cons(elist: exp_t list, code: kcode_t, sc: scope_t l
                         f"invalid variant type alias '{inst_name}'; should be TypApp(_, _)")
                     }
                     match (dvar_cases, dvar_flags.var_flag_record, dvar_ifaces) {
-                    | ([:: (rn, TypRecord (ref (relems, _)))], true, []) =>
+                    | ([:: (rn, TypRecord (ref (relems, _)), _)], true, []) =>
                         val rec_elems = [:: for (_, i, t, _) <- relems { (i, typ2ktyp(t, inst_loc)) } ]
                         val kt = ref (kdeftyp_t { kt_name=inst_name, kt_cname="",
                                 kt_targs=targs, kt_proto=noid, kt_props=None,
@@ -1514,7 +1514,7 @@ fun transform_all_types_and_cons(elist: exp_t list, code: kcode_t, sc: scope_t l
                         set_idk_entry(inst_name, KTyp(kt))
                         KDefTyp(kt) :: code
                     | _ =>
-                        val kvar_cases = [:: for (_, t) <- dvar_cases, tag <- tags {
+                        val kvar_cases = [:: for (_, t, _) <- dvar_cases, tag <- tags {
                                             (tag, typ2ktyp(t, inst_loc)) }]
                         val kvar_ifaces = [:: for (iname, meths) <- dvar_ifaces {
                             (iname, [:: for (a, b) <- meths {

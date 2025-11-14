@@ -430,7 +430,7 @@ type defvariant_t =
 {
     dvar_name: id_t; dvar_templ_args: id_t list;
     dvar_alias: typ_t; dvar_flags: var_flags_t;
-    dvar_cases: (id_t, typ_t) list;
+    dvar_cases: (id_t, typ_t, loc_t) list;
     dvar_ctors: id_t list; dvar_templ_inst: id_t list ref;
     dvar_ifaces: (id_t, (id_t, id_t) list) list;
     dvar_scope: scope_t list; dvar_loc: loc_t
@@ -1480,7 +1480,7 @@ fun walk_exp(e: exp_t, callb: ast_callb_t) {
         val {dvar_alias, dvar_cases} = *dvar
         *dvar = dvar->{
             dvar_alias=walk_typ_(dvar_alias),
-            dvar_cases=[:: for (n, t) <- dvar_cases {(n, walk_typ_(t))} ]
+            dvar_cases=[:: for (n, t, l) <- dvar_cases {(n, walk_typ_(t), l)} ]
         }
         e
     | DefInterface(di) => e

@@ -1873,9 +1873,9 @@ fun parse_typespec_or_record(ts: tklist_t): (tklist_t, typ_t)
     | _ => parse_typespec(ts)
 }
 
-fun have_mutable(cases: (id_t, typ_t) list) =
-    exists(for (_, t) <- cases {
-        | (_, TypRecord(ref (relems, _))) =>
+fun have_mutable(cases: (id_t, typ_t, loc_t) list) =
+    exists(for (_, t, _) <- cases {
+        | (_, TypRecord(ref (relems, _)), _) =>
             exists(for (flags, _, _, _) <- relems {flags.val_flag_mutable})
         | _ => false
         })
@@ -1932,7 +1932,7 @@ fun parse_deftype(ts: tklist_t)
     match ts {
     | (LBRACE, _) :: _ =>
         val (ts, t) = parse_typespec_or_record(ts)
-        val cases = [:: (tname, t)]
+        val cases = [:: (tname, t, noloc)]
         var hm = have_mutable(cases)
         val dvar = ref (defvariant_t {
             dvar_name = tname, dvar_templ_args=type_params,
@@ -1955,27 +1955,28 @@ fun parse_deftype(ts: tklist_t)
     | (IDENT(_, _), _) :: (COLON, _) :: _ =>
         val ts = match ts { | (BITWISE_OR, _) :: rest => rest | _ => ts }
         fun parse_cases_(ts: tklist_t, expect_bar: bool,
-            result: (id_t, typ_t) list): (tklist_t, (id_t, typ_t) list) =
+            result: (id_t, typ_t, loc_t) list): (tklist_t, (id_t, typ_t, loc_t) list) =
             match ts {
             | (BITWISE_OR, _) :: rest =>
                 if expect_bar { parse_cases_(rest, false, result) }
                 else { throw parse_err(ts, "extra '|'?") }
-            | (IDENT(_, i), _) :: (COLON, _) :: rest =>
+            | (IDENT(_, i), l) :: (COLON, _) :: rest =>
                 if expect_bar { (ts, result.rev()) }
                 else {
                     if !good_variant_name(i) {
                         throw parse_err(ts, "variant label should start with a capital letter")
                     }
                     val (ts, t) = parse_typespec_or_record(rest)
-                    parse_cases_(ts, true, (get_id(i), t) :: result)
+                    parse_cases_(ts, true, (get_id(i), t, l) :: result)
                 }
-            | (IDENT(_, i), _) :: rest =>
+            | (IDENT(_, i), l) :: rest =>
+                println(f"HIA: i: {i}, l: {l}")
                 if expect_bar { (ts, result.rev()) }
                 else {
                     if !good_variant_name(i) {
                         throw parse_err(ts, "variant label should start with a capital letter")
                     }
-                    parse_cases_(rest, true, (get_id(i), TypVoid) :: result)
+                    parse_cases_(rest, true, (get_id(i), TypVoid, l) :: result)
                 }
             | _ => (ts, result.rev())
             }
