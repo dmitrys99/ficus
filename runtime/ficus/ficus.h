@@ -477,6 +477,8 @@ bool fx_isalpha(char_ ch);
 bool fx_isdigit(char_ ch);
 bool fx_isalnum(char_ ch);
 bool fx_ispunct(char_ ch);
+bool fx_isupper(char_ ch);
+bool fx_islower(char_ ch);
 bool fx_isdecimal(char_ ch);
 bool fx_isspace(char_ ch);
 char_ fx_tolower(char_ ch);

@@ -299,6 +299,16 @@ bool fx_ispunct(char_ ch)
             (1 << FX_UNICODE_CAT_Pf)) & (1 << _fx_char_category(ch))) != 0;
 }
 
+bool fx_isupper(char_ ch)
+{
+    return _fx_char_category(ch) == FX_UNICODE_CAT_Lu;
+}
+
+bool fx_islower(char_ ch)
+{
+    return _fx_char_category(ch) == FX_UNICODE_CAT_Ll;
+}
+
 bool fx_isdecimal(char_ ch)
 {
     return _fx_char_category(ch) == FX_UNICODE_CAT_Nd;

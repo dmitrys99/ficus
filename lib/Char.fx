@@ -8,7 +8,9 @@
 @pure @nothrow fun isalpha(c: char): bool = @ccode { return fx_isalpha(c) }
 @pure @nothrow fun isalnum(c: char): bool = @ccode { return fx_isalnum(c) }
 @pure @nothrow fun isdigit(c: char): bool = @ccode { return fx_isdigit(c) }
-@pure @nothrow fun isdecimal(c: char): bool = @ccode { return fx_isdecimal(c) }
 @pure @nothrow fun isspace(c: char): bool = @ccode { return fx_isspace(c) }
 @pure @nothrow fun tolower(c: char): char = @ccode { return fx_tolower(c) }
 @pure @nothrow fun toupper(c: char): char = @ccode { return fx_toupper(c) }
+@pure @nothrow fun islower(c: char): bool = @ccode { return fx_islower(c) }
+@pure @nothrow fun isupper(c: char): bool = @ccode { return fx_isupper(c) }
+@pure @nothrow fun isdecimal(c: char): bool = @ccode { return fx_isdecimal(c) }
