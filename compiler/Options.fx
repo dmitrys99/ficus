@@ -37,6 +37,7 @@ type options_t =
     print_tokens: bool = false;
     run_app: bool = false;
     verbose: bool = false;
+    candidates: bool = false;
     W_unused: bool = true
 }
 
@@ -53,6 +54,7 @@ Usage: {fxname} [-pr-tokens | -pr-ast0 | -pr-ast | -pr-k0 | -pr-k | -no-c
     | -app | -run | -O0 | -O1 | -O3 | -inline-threshold <n> | -no-openmp
     | -o <output_name> | -I <incdir> | -B <build_root>
     | -c++ | -cflags <cflags> | -clibs <clibs>
+    | -candidates
     | -verbose | -h | -v ] <input_file>.fx [-- <app_args ...>]
 
 Run '{fxname} -h' to get more detailed help")
@@ -69,11 +71,12 @@ where options can be some of:
     -pr-k           Print optimized K-form of the parsed files
                     (only a part of the generated K-form is retained
                     because of the dead code elimination step)
+    -candidates     Show function candidates on typecheck errors
     -no-c           Do not generate C code
     -app            Build application (default mode)
     -run            Build application and run it
     -O0             Optimization level 0: disable all optimizations
-                                         except for the most essential ones
+                                          except for the most essential ones
     -O1             Optimization level 1 (default): enable most of the optimizations
     -O3             Optimization level 3: enable all optimizations
     -Ofast          Optimization level 3; passes '-Ofast' to C/C++ compiler
@@ -133,6 +136,8 @@ fun parse_options(): bool {
     var ok = true
     while args != [] {
         args = match args {
+            | "-candidates" :: next =>
+                opt.candidates = true; next
             | "-no-preamble" :: next =>
                 opt.use_preamble = false; next
             | "-rebuild" :: next =>

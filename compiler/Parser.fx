@@ -5,7 +5,7 @@
 
 // Ficus recursive descent parser
 
-import File, Filename, Hashmap, Hashset, Sys
+import File, Filename, Hashmap, Hashset, Sys, Char
 from Ast import *
 import LexerUtils as Lxu
 from Lexer import *
@@ -62,7 +62,7 @@ type id_elist_t = id_exp_t list
 
 fun good_variant_name(s: string) {
     val c = s[0]
-    ('A' <= c <= 'Z') || s.contains('.')
+    Char.isupper(c) || s.contains('.')
 }
 
 fun tok2str(ts: (token_t, loc_t) list)
@@ -819,7 +819,7 @@ fun parse_expseq(ts: tklist_t, toplevel: bool): (tklist_t, exp_t list)
             val (ts, i) = match rest {
                 | (IDENT(_, i), _) :: rest =>
                     if !good_variant_name(i) {
-                        throw parse_err(ts, "exception name should start with a capital letter (A..Z)")
+                        throw parse_err(ts, "exception name should start with a capital letter")
                     }
                     (rest, get_id(i))
                 | _ =>
@@ -1964,7 +1964,7 @@ fun parse_deftype(ts: tklist_t)
                 if expect_bar { (ts, result.rev()) }
                 else {
                     if !good_variant_name(i) {
-                        throw parse_err(ts, "variant label should start with a capital letter A..Z")
+                        throw parse_err(ts, "variant label should start with a capital letter")
                     }
                     val (ts, t) = parse_typespec_or_record(rest)
                     parse_cases_(ts, true, (get_id(i), t) :: result)
@@ -1973,7 +1973,7 @@ fun parse_deftype(ts: tklist_t)
                 if expect_bar { (ts, result.rev()) }
                 else {
                     if !good_variant_name(i) {
-                        throw parse_err(ts, "variant label should start with a capital letter A..Z")
+                        throw parse_err(ts, "variant label should start with a capital letter")
                     }
                     parse_cases_(rest, true, (get_id(i), TypVoid) :: result)
                 }

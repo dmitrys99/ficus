@@ -707,8 +707,11 @@ fun report_not_found_typed(n: id_t, t: typ_t, possible_matches: env_entry_t list
             f"'{nstr}: {typ2str(tj)}' defined at {locj}"
         } ]
     val candidates_msg =
-        if strs == [] { "" }
-        else { join_embrace("\nCandidates:\n\t", "\n", ",\n\t", strs) }
+        match (strs, Options.opt.candidates) {
+            | ([], _) => ""
+            | (_, false) => " There are candidates list. Compile with `-candidates` to see the list.\n"
+            | (_, true)  => join_embrace("\nCandidates:\n\t", "\n", ",\n\t", strs)
+        }
     compile_err(loc, f"the appropriate match for '{nstr}' of \
                 type '{typ2str(t)}' is not found.{candidates_msg}")
 }
