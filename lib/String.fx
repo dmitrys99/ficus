@@ -346,3 +346,24 @@ fun escaped(s: string, ~quotes: bool=true)
     }
     join("", (q :: s[verb:] :: ll).rev())
 }
+
+@private
+val hex_format = format_t {
+  fill      = ' ',
+  align     = ' ',
+  sign      = '-',
+  num_alt   = false,
+  width     = 0,
+  precision = -1,
+  grouping  = ' ',
+  typ       = 'x'
+}
+
+// Функция печатает числов в виде шестнадцатеричной строки 0xHHHH
+fun hex(i: int64): string {
+  if i < 0 {
+    f"-0x{toupper(string(-i, hex_format))}"
+  } else {
+    f"0x{toupper(string(i, hex_format))}"
+  }
+}
