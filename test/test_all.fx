@@ -23,6 +23,7 @@ import test_re2
 import test_ds
 import test_dsp
 import test_deque
+import test_map
 import test_filename
 import test_oop
 import test_parallel

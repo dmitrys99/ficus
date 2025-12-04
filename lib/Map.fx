@@ -51,7 +51,7 @@ exception MapError
 fun empty(cmp: 'k cmp_t): ('k, 'd) Map.t =
     t { root=(Empty : ('k, 'd) tree_t), cmp=cmp }
 
-fun isempty(s: 't t): bool
+fun isempty(m: ('k, 'd) t): bool
 {
     | { root=(Empty : ('k, 'd) tree_t) } => true
     | _ => false
@@ -298,6 +298,10 @@ fun foldr(m: ('k, 'd) Map.t, f: ('k, 'd, 'r) -> 'r, res0: 'r): 'r
         | _ => res
     }
     update_(m.root, f, res0)
+}
+
+fun count(m: ('k, 'd) t): int {
+  foldl(m, fun (k: 'k, d: 'd, r: int): int = r + 1, 0)
 }
 
 fun app(m: ('k, 'd) Map.t, f: ('k, 'd) -> void): void
