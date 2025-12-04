@@ -247,7 +247,10 @@ TEST("basic.types.templates", fun()
     type ('a, 'b) template_fun_t = 'a -> 'b
     type 'a template_fun2_t = ('a, 'a) template_fun_t
     type ('a, 'b) tuple_signature_t = ('a, 'b, 'a template_fun2_t -> 'b template_fun2_t)
-    type ('a, 'b) ct = A: ('a, 'a) template_fun_t | B: ('b, 'b) tuple_signature_t | C: ('a, 'b) ct
+    type ('a, 'b) ct =
+        | A: ('a, 'a) template_fun_t
+        // TODO Не используется в тесте | B: ('b, 'b) tuple_signature_t
+        | C: ('a, 'b) ct
 
     // Check template_fun_t
     val my_func: (int, string) template_fun_t = fun (x:int) {string(x)}

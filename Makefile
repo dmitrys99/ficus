@@ -46,7 +46,7 @@ endif
 
 FICUS_FLAGS := -verbose -O3
 
-.PHONY: all clean final_note doc
+.PHONY: all clean final_note doc test
 
 all: $(FICUS0) $(FICUS) final_note
 
@@ -96,3 +96,7 @@ clean:
 	@$(RM) $(BUILD_DIR)/ficus
 	@$(RM) $(FICUS)
 	@$(RM) doc/ficustut_a4.pdf
+
+test: $(FICUS)
+	@echo Run tests
+	$(FICUS) -run test/test_all.fx

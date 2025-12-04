@@ -384,7 +384,7 @@ fun test_run_all(opts: test_options_t)
         throw TestFailure("test filter with '*' inside is currently unsupported")
     }
     val iscolor = Sys.colorterm()
-    val (Red, Green, Normal) = if iscolor {("\33[31;1m", "\33[32;1m", "\33[0m")} else {("", "", "")}
+    val (Red, Green, White, Normal) = if iscolor {("\33[31;1m", "\33[32;1m", "\33[37;1m", "\33[0m")} else {("", "", "", "")}
     val ts_scale = 1000./Sys.tick_frequency()
     var nexecuted = 0
     val ts0_start = Sys.tick_count()
@@ -399,7 +399,7 @@ fun test_run_all(opts: test_options_t)
         if (!matches ^ inverse_test) {failed}
         else {
             nexecuted += 1
-            println(f"{Green}[ RUN      ]{Normal} {name}")
+            println(f"{White}[ RUN  ]{Normal} {name}")
             g_test_state = test_init_state_before_test()
             val ts_start = Sys.tick_count()
             try {
@@ -416,8 +416,8 @@ fun test_run_all(opts: test_options_t)
             }
             val ts_end = Sys.tick_count()
             val ok = g_test_state.currstatus
-            val ok_fail = if ok {f"{Green}[       OK ]{Normal}"}
-                          else {f"{Red}[     FAIL ]{Normal}"}
+            val ok_fail = if ok {f"{Green}[ OK   ]{Normal}"}
+                          else {f"{Red}[ FAIL ]{Normal}"}
             val ts_diff_str = test_duration2str((ts_end - ts_start)*ts_scale)
             println(f"{ok_fail} {name} ({ts_diff_str})\n")
             if ok {failed} else {name :: failed}
