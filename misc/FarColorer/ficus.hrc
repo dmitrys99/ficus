@@ -132,6 +132,7 @@
 
       <!-- Integer literals   -->
       <regexp match="/\b[\-]?(\d+)((i|u)(8|16|32|64|128))?\b/" region="Number" region2="NumberSuffix"/>
+      <regexp match="/\b[\-]?0x[0-9a-fA-F]+((i|u)(8|16|32|64|128))?\b/" region="Number" region2="NumberSuffix" region3="NumberSuffix"/>
 
       <!-- Character 'x', generic type 't and matrix transposition A' highlight -->
       <inherit scheme="Character"/>
