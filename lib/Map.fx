@@ -301,7 +301,7 @@ fun foldr(m: ('k, 'd) Map.t, f: ('k, 'd, 'r) -> 'r, res0: 'r): 'r
 }
 
 fun count(m: ('k, 'd) t): int {
-  foldl(m, fun (k: 'k, d: 'd, r: int): int = r + 1, 0)
+  foldl(m, fun (k: 'k, _: 'd, r: int): int = r + 1, 0)
 }
 
 fun app(m: ('k, 'd) Map.t, f: ('k, 'd) -> void): void
