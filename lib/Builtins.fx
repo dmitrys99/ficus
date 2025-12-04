@@ -604,6 +604,20 @@ operator |  (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj | bj})
 operator &  (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj & bj})
 operator ^  (a: ('t...), b: ('t...)): ('t...) = (for aj <- a, bj <- b {aj ^ bj})
 
+fun cmp(a: int,    b: int): int    = a <=> b
+fun cmp(a: int8,   b: int8): int   = a <=> b
+fun cmp(a: uint8,  b: uint8): int  = a <=> b
+fun cmp(a: int16,  b: int16): int  = a <=> b
+fun cmp(a: uint16, b: uint16): int = a <=> b
+fun cmp(a: int32,  b: int32): int  = a <=> b
+fun cmp(a: uint32, b: uint32): int = a <=> b
+fun cmp(a: int64,  b: int64): int  = a <=> b
+fun cmp(a: uint64, b: uint64): int = a <=> b
+fun cmp(a: float,  b: float): int  = a <=> b
+fun cmp(a: double, b: double): int = a <=> b
+fun cmp(a: char,   b: char): int   = a <=> b
+fun cmp(a: bool,   b: bool): int   = a <=> b
+
 // complex multiplication
 operator * (a: ('t*2), b: ('t*2)) =
     (a.0*b.0 - a.1*b.1, a.0*b.1 + a.1*b.0)

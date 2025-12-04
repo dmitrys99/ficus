@@ -14,3 +14,5 @@
 @pure @nothrow fun islower(c: char): bool = @ccode { return fx_islower(c) }
 @pure @nothrow fun isupper(c: char): bool = @ccode { return fx_isupper(c) }
 @pure @nothrow fun isdecimal(c: char): bool = @ccode { return fx_isdecimal(c) }
+
+@inline fun cmp(c1: char, c2: char) = c1 <=> c2

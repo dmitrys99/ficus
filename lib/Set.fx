@@ -51,7 +51,7 @@ exception RBSetError
 fun empty(cmp: 't cmp_t): 't Set.t =
     t { root=(Empty : 't tree_t), size=0, cmp=cmp }
 
-fun empty(s: 't Set.t): bool
+fun isempty(s: 't Set.t): bool
 {
     | { root=(Empty : 't tree_t) } => true
     | _ => false
@@ -342,7 +342,19 @@ fun add_list(s: 't Set.t, l: 't list): 't Set.t
     t {root=new_root, size=size, cmp=cmp}
 }
 
+fun add_array(s: 't Set.t, arr: 't[]): 't Set.t
+{
+    val cmp = s.cmp
+    val fold new_root = s.root, size = s.size for x <- arr {
+        val (new_root, dsz) = add_(new_root, x, cmp)
+        (new_root, size+dsz)
+    }
+    t {root=new_root, size=size, cmp=cmp}
+}
+
 fun from_list(cmp: 't cmp_t, l: 't list): 't Set.t = add_list(empty(cmp), l)
+
+fun from_array(cmp: 't cmp_t, arr: 't list): 't Set.t = add_array(empty(cmp), arr)
 
 fun list(s: 't Set.t): 't list
 {

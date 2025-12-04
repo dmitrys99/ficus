@@ -51,7 +51,7 @@ exception MapError
 fun empty(cmp: 'k cmp_t): ('k, 'd) Map.t =
     t { root=(Empty : ('k, 'd) tree_t), cmp=cmp }
 
-fun empty(s: 't t): bool
+fun isempty(s: 't t): bool
 {
     | { root=(Empty : ('k, 'd) tree_t) } => true
     | _ => false
@@ -346,8 +346,20 @@ fun add_list(m: ('k, 'd) Map.t, l: ('k, 'd) list)
     t {root=new_root, cmp=cmp}
 }
 
+fun add_array(m: ('k, 'd) Map.t, a: ('k, 'd)[])
+{
+    val cmp = m.cmp
+    val fold new_root=m.root for (xk, xd) <- a {
+        add_(new_root, xk, xd, cmp)
+    }
+    t {root=new_root, cmp=cmp}
+}
+
 fun from_list(cmp: 'k cmp_t, l: ('k, 'd) list): ('k, 'd) Map.t =
     add_list((empty(cmp) : ('k, 'd) Map.t), l)
+
+fun from_array(cmp: 'k cmp_t, a: ('k, 'd)[]): ('k, 'd) Map.t =
+    add_array((empty(cmp) : ('k, 'd) Map.t), a)
 
 fun list(m: ('k, 'd) Map.t): ('k, 'd) list
 {

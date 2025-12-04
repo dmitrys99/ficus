@@ -1358,7 +1358,7 @@ fun transform_pat_matching(a: atom_t, cases: (pat_t, exp_t) list,
         if checks == [] { have_else = true }
         (checks.rev(), ke)
     }]
-    if is_variant && !have_else && !match_var_cases.empty() {
+    if is_variant && !have_else && !match_var_cases.isempty() {
         val idlist = ", ".join(match_var_cases.map(fun (n) {f"'{n}'"}))
         val idlist_len = idlist.length()
         val msg = if idlist_len == 1 {f"the case {idlist} is not covered"}
