@@ -953,8 +953,8 @@ fun print(a: 't) = print_string(string(a))
 @nothrow fun print(a: int16): void = @ccode { printf("%d", (int)a) }
 @nothrow fun print(a: uint32): void = @ccode { printf("%u", a) }
 @nothrow fun print(a: int32): void = @ccode { printf("%d", a) }
-@nothrow fun print(a: uint64): void = @ccode { printf("%llu", a) }
-@nothrow fun print(a: int64): void = @ccode { printf("%lld", a) }
+@nothrow fun print(a: uint64): void = @ccode { printf("%lu", a) }
+@nothrow fun print(a: int64): void = @ccode { printf("%ld", a) }
 @nothrow fun print(a: half): void
 @ccode {
     fx_bits32_t u;
