@@ -15,6 +15,7 @@ TEST("map.create", fun() {
   var m: map_t = Map.empty(cmp) // cmp берется из Builtin
 
   EXPECT_EQ(m.isempty(), true)
+  EXPECT_EQ(m.count(), 0)
   
   m = m.add(1, 2)
   EXPECT_EQ(m.isempty(), false)
@@ -82,4 +83,19 @@ TEST("map.foldl", fun() {
 
   val r1 = m.foldr(fun (k: 'k, d: 'd, r: string): string = r + f"{d}", "")
   EXPECT_EQ(r1, "432")
+})
+
+TEST("map.stress", fun() {
+  type map_t = (int, int) Map.t
+  var m: map_t = Map.empty(cmp) // cmp берется из Builtin
+  for i: int <- 0:1000000 {
+    m = m.add(i, i)
+  }
+  EXPECT_EQ(m.count(), 1000000)
+  m = m.remove(999998)
+  m = m.remove(2)
+
+  EXPECT_EQ(m.count(), 999998)
+  EXPECT_EQ(m.find(3), 3)
+  EXPECT_EQ(m.find(999997), 999997)
 })
