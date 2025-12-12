@@ -712,8 +712,9 @@ fun report_not_found_typed(n: id_t, t: typ_t, possible_matches: env_entry_t list
             | (_, false) => " There are candidates list. Compile with `-candidates` to see the list.\n"
             | (_, true)  => join_embrace("\nCandidates:\n\t", "\n", ",\n\t", strs)
         }
+    val env_msg = if Options.opt.verbose {"\nCheck Ficus environment (-print-env command line key)."} else {""}
     compile_err(loc, f"the appropriate match for '{nstr}' of \
-                type '{typ2str(t)}' is not found.{candidates_msg}")
+                type '{typ2str(t)}' is not found.{env_msg}{candidates_msg}")
 }
 
 fun find_first(n: id_t, env: env_t, env0: env_t, sc: scope_t list,

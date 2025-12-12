@@ -3,6 +3,7 @@
     See ficus/LICENSE for the licensing terms
 */
 import Filename, Sys
+from Compiler_env import *
 
 type optval_t = OptBool: bool | OptInt: int | OptString: string
 
@@ -54,7 +55,7 @@ Usage: {fxname} [-pr-tokens | -pr-ast0 | -pr-ast | -pr-k0 | -pr-k | -no-c
     | -app | -run | -O0 | -O1 | -O3 | -inline-threshold <n> | -no-openmp
     | -o <output_name> | -I <incdir> | -B <build_root>
     | -c++ | -cflags <cflags> | -clibs <clibs>
-    | -candidates
+    | -candidates | -print-env
     | -verbose | -h | -v ] <input_file>.fx [-- <app_args ...>]
 
 Run '{fxname} -h' to get more detailed help")
@@ -115,6 +116,7 @@ where options can be some of:
                     If environment variable FICUS_LINK_LIBRARIES is set,
                     its value is inserted after <clibs>
     -verbose        Display various info during the build
+    -print-env      Print Ficus environment
     -h or -help or --help  Display this information
     -v or -version  Display information about compiler and the platform, then exit.
     --              Specify the application parameters when '-run' flag is used,
@@ -133,9 +135,12 @@ fun parse_options(): bool {
     var inputfile = ""
     var prhelp = 0
     var prver = false
+    var prenv = false
     var ok = true
     while args != [] {
         args = match args {
+            | "-print-env" :: next =>
+                prenv = true; []
             | "-candidates" :: next =>
                 opt.candidates = true; next
             | "-no-preamble" :: next =>
@@ -269,12 +274,13 @@ fun parse_options(): bool {
         }
     }
 
+
     if opt.optim_iters <= 0 {
         opt.optim_iters = if opt.optimize_level >= 3 {3} else {2}
     }
     opt.optim_iters = max(opt.optim_iters, 2)
 
-    if !prver && prhelp == 0 && ok {
+    if !prver && !prenv && prhelp == 0 && ok {
         if inputfile == "" {
             if Sys.argv.tl() != [] {
                 println(f"{error} input file name is missing")
@@ -292,6 +298,10 @@ fun parse_options(): bool {
         println(f"Ficus version: {__ficus_version_str__} (git commit: {__ficus_git_commit__})")
         println(f"Platform: {Sys.osname(true)}")
         println(f"C/C++ Compiler: {Sys.cc_version()}")
+        false
+    } else if prenv {
+        val (ficus_root, ficus_paths) = find_ficus_dirs()
+        print_ficus_environment(ficus_root, ficus_paths)
         false
     } else if prhelp > 0 {
         print_help(prhelp > 1)
